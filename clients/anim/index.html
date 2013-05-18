@@ -1,0 +1,43 @@
+<html>
+	<head>
+		<title>re:publica - Animation</title>
+
+		<script type="text/javascript" src="jquery-1.9.1.min.js"></script>
+		<script type="text/javascript" src="data.js"></script>
+		<script type="text/javascript" src="main.js"></script>
+		<style type="text/css">
+			body {
+				position: relative;
+			}
+			#canvas, #map {
+				position: absolute;
+				top: 0;
+				left: 0;
+			}
+			#timer {
+				position: absolute;
+				top: 520;
+				left: 0px;
+				font-size: 20px;
+				font-family: georgia;
+			}
+			#menu {
+				position: absolute;
+				top: 550px;
+				left: 0;
+			}
+			.button {
+				margin-right: 10px;
+				background: #eee;
+				padding: 3px;
+				cursor: pointer;
+			}
+		</style>
+	</head>
+	<body>
+		<img id="map" src="map.jpg" width="1024" height="500">
+		<canvas id="canvas" width="1024" height="500"></canvas>
+		<div id="timer"></div>
+		<div id="menu"></div>
+	</body>
+</html>
