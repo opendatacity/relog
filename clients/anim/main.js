@@ -166,7 +166,7 @@ function updatePosition() {
 
 function renderCanvas() {
 	context.clearRect(0, 0, width, height);
-	context.fillStyle = '#F00';
+	context.fillStyle = '#000';
 
 	clients.forEach(function (client) {
 		if (client.r > 1e-2) {
@@ -175,8 +175,8 @@ function renderCanvas() {
 			var r = Math.sqrt(dx*dx + dy*dy);
 
 			if (r > 1) {
-				var a = Math.min(10/r, 1);
-				context.strokeStyle = 'rgba(255,0,0,'+a+')';
+				var a = Math.min(5/r, 1);
+				context.strokeStyle = 'rgba(0,0,0,'+a+')';
 				context.lineWidth = client.r*2*radius;
 				context.beginPath();
 				context.moveTo(client.xo, client.yo);
