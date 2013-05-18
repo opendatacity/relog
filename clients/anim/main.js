@@ -8,6 +8,7 @@ var decay = 0.5;
 var timeStep = 1;
 var stepSize = 50*timeStep;
 var frameDuration = 50;
+var radius = 1.4;
 
 var interval;
 var time2index = [];
@@ -176,6 +177,7 @@ function renderCanvas() {
 			if (r > 1) {
 				var a = Math.min(10/r, 1);
 				context.strokeStyle = 'rgba(255,0,0,'+a+')';
+				context.lineWidth = client.r*2*radius;
 				context.beginPath();
 				context.moveTo(client.xo, client.yo);
 				context.lineTo(client.x,  client.y );
@@ -183,7 +185,7 @@ function renderCanvas() {
 
 			} else {
 				context.beginPath();
-				context.arc(client.x, client.y, client.r, 0, 2*Math.PI, false);
+				context.arc(client.x, client.y, client.r*radius, 0, 2*Math.PI, false);
 				context.fill();
 			}
 		}
