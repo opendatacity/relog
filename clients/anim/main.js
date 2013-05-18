@@ -56,7 +56,7 @@ function init() {
 
 			var r = Math.round(Math.sqrt(x*x + y*y)*100);
 			var a = Math.atan2(y,x);
-			circlePoints.push({x:x,y:y,r:r,a:a});
+			circlePoints.push({x:x, y:y, r:r, a:a});
 		}
 	}
 
@@ -175,7 +175,7 @@ function renderCanvas() {
 			var r = Math.sqrt(dx*dx + dy*dy);
 
 			if (r > 1) {
-				var a = Math.min(5/r, 1);
+				var a = Math.min(Math.pow(1/r, 0.5), 1);
 				context.strokeStyle = 'rgba(0,0,0,'+a+')';
 				context.lineWidth = client.r*2*radius;
 				context.beginPath();
