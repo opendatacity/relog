@@ -5,9 +5,9 @@ var width = 1024;
 var height = 500;
 
 var decay = 0.5;
-var timeStep = 1;
+var timeStep = 0.5;
 var stepSize = 50*timeStep;
-var frameDuration = 50;
+var frameDuration = 40;
 var radius = 1.4;
 
 var interval;
