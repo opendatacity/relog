@@ -12,6 +12,7 @@ var frameDuration = 50;
 var interval;
 var time2index = [];
 var random = [];
+var circlePoints = [];
 
 $(function () {
 	init();
@@ -46,6 +47,20 @@ function init() {
 		while (data.times[index+1] <= time) index++;
 		time2index[time] = index;
 	}
+
+	for (var i = -100; i < 100; i++) {
+		for (var j = -100; j < 100; j++) {
+			//var x = i + (j % 2)/2, y = j * Math.sqrt(0.75);
+			var x = i, y = j;
+
+			var r = Math.round(Math.sqrt(x*x + y*y)*100);
+			var a = Math.atan2(y,x);
+			circlePoints.push({x:x,y:y,r:r,a:a});
+		}
+	}
+
+	circlePoints = circlePoints.sort( function (a,b) { return (a.r == b.r) ? (a.a - b.a) : (a.r - b.r);} );
+	circlePoints.length = 2000;
 }
 
 function start() {
@@ -111,14 +126,12 @@ function updateData() {
 
 	points.forEach(function (clientList, pointIndex) {
 		var point = data.points[pointIndex];
-		var x0 = point.x*width;
-		var y0 = point.y*height;
+		var x0 = Math.round(point.x*width);
+		var y0 = Math.round(point.y*height);
 		clientList.forEach(function (clientIndex, index) {
 			var client = clients[clientIndex];
-			var a = Math.sqrt(index)*4;
-			var r = Math.sqrt(index)*1.5;
-			client.x0 = x0 + Math.cos(a)*r;
-			client.y0 = y0 + Math.sin(a)*r;
+			client.x0 = x0 + circlePoints[index].x*3;
+			client.y0 = y0 + circlePoints[index].y*3;
 			if (client.x === undefined) {
 				client.x = client.x0;
 				client.y = client.y0;
