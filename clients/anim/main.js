@@ -16,6 +16,30 @@ $(function () {
 	start();
 })
 
+function init() {
+	context = $('#canvas')[0].getContext('2d');
+	clients = [];
+	data.matrix.forEach(function (times, index) {
+		clients[index] = {point:undefined, x:0, y:0, r:0, x0:0, y0:0, r0:0};
+		random[index] = Math.random();
+	});
+	
+	var menu = $('#menu');
+	for (var i = 2; i < 16; i++) {
+		(function () {
+			var time = i*6*60;
+			var d = Math.floor(i/4);
+			var h = (i % 4)*6;
+			var node = $('<span class="button">T'+d+' '+h+':00</span>');
+			node.click(function () {
+				currentTime = time;
+				start();
+			})
+			menu.append(node);
+		})();
+	}
+}
+
 function start() {
 	if (!interval) interval = setInterval(update, frameDuration);
 	setTimeout(stop, 10000);
@@ -39,29 +63,6 @@ function update() {
 	updateData();
 	updatePosition();
 	renderCanvas();
-}
-
-function init() {
-	context = $('#canvas')[0].getContext('2d');
-	clients = [];
-	data.matrix.forEach(function (times, index) {
-		clients[index] = {point:undefined, x:0, y:0, r:0, x0:0, y0:0, r0:0};
-	});
-	
-	var menu = $('#menu');
-	for (var i = 2; i < 16; i++) {
-		(function () {
-			var time = i*6*60;
-			var d = Math.floor(i/4);
-			var h = (i % 4)*6;
-			var node = $('<span class="button">T'+d+' '+h+':00</span>');
-			node.click(function () {
-				currentTime = time;
-				start();
-			})
-			menu.append(node);
-		})();
-	}
 }
 
 function renderTime() {
