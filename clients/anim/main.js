@@ -10,6 +10,8 @@ var stepSize = 50*timeStep;
 var frameDuration = 50;
 
 var interval;
+var time2index = [];
+var random = [];
 
 $(function () {
 	init();
@@ -37,6 +39,12 @@ function init() {
 			})
 			menu.append(node);
 		})();
+	}
+
+	var index = -1;
+	for (var time = -60; time <= (4*24+1)*60; time++) {
+		while (data.times[index+1] <= time) index++;
+		time2index[time] = index;
 	}
 }
 
@@ -75,22 +83,19 @@ function renderTime() {
 }
 
 function updateData() {
-	var timeId = -1;
-	data.times.forEach(function (time, index) {
-		if (time < currentTime) timeId = index;
-	});
-
 	var points = [];
 	data.points.forEach(function (point, index) {
 		points[index] = [];
 	})
 
 	data.matrix.forEach(function (times, index) {
+		var timeId = time2index[Math.floor(currentTime + 15*random[index])];
+
 		var point = undefined;
 		if (isFinite(times[timeId])) point = times[timeId];
 
 		var client = clients[index];
-		if ((client.point != point) && (Math.random() > 0.8)) {
+		if (client.point != point) {
 			if (valid(point)) {
 				client.x0 = data.points[point].x;
 				client.y0 = data.points[point].y;
