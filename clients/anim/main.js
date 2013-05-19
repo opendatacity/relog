@@ -9,6 +9,7 @@ var decay = Math.pow(0.8, 1/timeStep);
 var stepSize = 50*timeStep;
 var frameDuration = 40;
 var radius = 1.4;
+var jump = false;
 
 var interval;
 var time2index = [];
@@ -38,6 +39,7 @@ function init() {
 			var node = $('<span class="button">T'+d+' '+h+':00</span>');
 			node.click(function () {
 				currentTime = time;
+				jump = true;
 				start();
 			})
 			menu.append(node);
@@ -147,25 +149,34 @@ function updateData() {
 }
 
 function updatePosition() {
-	clients.forEach(function (client) {
-		client.xo = client.x;
-		client.yo = client.y;
+	if (jump) {
+		clients.forEach(function (client) {
+			client.x = client.xo = client.x0;
+			client.y = client.yo = client.y0;
+			client.r = client.r0;
+		});
+	} else {
+		clients.forEach(function (client) {
+			client.xo = client.x;
+			client.yo = client.y;
 
-		var dx = (client.x0 - client.x);
-		var dy = (client.y0 - client.y);
-		var r = Math.sqrt(dx*dx + dy+dy);
-		if (r > 1e-2) {
-			var rn = Math.max(r-stepSize, 0);
-			var f = 1-rn/r;
+			var dx = (client.x0 - client.x);
+			var dy = (client.y0 - client.y);
+			var r = Math.sqrt(dx*dx + dy*dy);
+			if (r > 1e-2) {
+				var rn = Math.max(r-stepSize, 0);
+				var f = 1-rn/r;
 
-			client.x += (client.x0 - client.x)*f;
-			client.y += (client.y0 - client.y)*f;
-		} else {
-			client.x = client.x0;
-			client.y = client.y0;
-		}
-		client.r += (client.r0 - client.r)*decay;
-	})
+				client.x += (client.x0 - client.x)*f;
+				client.y += (client.y0 - client.y)*f;
+			} else {
+				client.x = client.x0;
+				client.y = client.y0;
+			}
+			client.r += (client.r0 - client.r)*decay;
+		});
+	}
+	jump = false;
 }
 
 function renderCanvas() {
