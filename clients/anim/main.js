@@ -105,9 +105,9 @@ function renderTime() {
 }
 
 function updateData() {
-	var points = [];
+	var pointList = [];
 	data.points.forEach(function (point, index) {
-		points[index] = [];
+		pointList[index] = [];
 	})
 
 	data.matrix.forEach(function (times, index) {
@@ -128,10 +128,10 @@ function updateData() {
 			}
 			client.point = point;
 		}
-		if (valid(client.point)) points[client.point].push(index);
+		if (valid(client.point)) pointList[client.point].push(index);
 	});
 
-	points.forEach(function (clientList, pointIndex) {
+	pointList.forEach(function (clientList, pointIndex) {
 		var point = data.points[pointIndex];
 		var x0 = Math.round(point.x*width);
 		var y0 = Math.round(point.y*height);
