@@ -1,8 +1,10 @@
-var currentTime = 60*(24*2+9);
+var currentTime = 60*(24*1+10.4);
 var clients = [];
 var context;
 var width = 1024;
 var height = 500;
+var gridSize = 3;
+var nearFieldRadius = 30;
 
 var timeStep = 0.2;
 var decay = Math.pow(0.8, 1/timeStep);
@@ -10,23 +12,29 @@ var stepSize = 50*timeStep;
 var frameDuration = 40;
 var radius = 1.4;
 var jump = false;
+var stepGridRadius = Math.ceil(stepSize/gridSize);
+var nearFieldGridRadius = Math.ceil(nearFieldRadius/gridSize);
 
 var interval;
 var time2index = [];
 var random = [];
-var circlePoints = [];
+var stepGrid = [];
+var nearFieldGrid = [];
+var grid = [];
+
+for (var x = -nearFieldGridRadius; x < width/gridSize+nearFieldGridRadius; x++) grid[x] = [];
 
 $(function () {
 	init();
 	start();
-	setTimeout(stop, 30000);
+	setTimeout(stop, 60000);
 })
 
 function init() {
 	context = $('#canvas')[0].getContext('2d');
 	clients = [];
 	data.matrix.forEach(function (times, index) {
-		clients[index] = {point:undefined, x:0, y:0, r:0, x0:0, y0:0, r0:0};
+		clients[index] = {point:undefined, x:0, y:0, r:0, x0:0, y0:0, r0:0, index:index, lastEvent:0};
 		random[index] = Math.random();
 	});
 	
@@ -56,19 +64,26 @@ function init() {
 		time2index[time] = index;
 	}
 
-	for (var i = -100; i < 100; i++) {
-		for (var j = -100; j < 100; j++) {
-			//var x = i + (j % 2)/2, y = j * Math.sqrt(0.75);
-			var x = i, y = j;
-
-			var r = Math.round(Math.sqrt(x*x + y*y)*100);
-			var a = Math.atan2(y,x);
-			circlePoints.push({x:x, y:y, r:r, a:a});
+	for (var x = -stepGridRadius; x <= stepGridRadius; x++) {
+		for (var y = -stepGridRadius; y <= stepGridRadius; y++) {
+			var r = Math.round(Math.sqrt(x*x + y*y)*100)/100;
+			if (r <= stepGridRadius+1) {
+				stepGrid.push({x:x, y:y, r:r});
+			}
 		}
 	}
+	stepGrid = stepGrid.sort( function (a,b) { return (a.r - b.r); } );
 
-	circlePoints = circlePoints.sort( function (a,b) { return (a.r == b.r) ? (a.a - b.a) : (a.r - b.r);} );
-	circlePoints.length = 2000;
+	for (var x = -nearFieldGridRadius; x <= nearFieldGridRadius; x++) {
+		for (var y = -nearFieldGridRadius; y <= nearFieldGridRadius; y++) {
+			var r = Math.round(Math.sqrt(x*x + y*y)*100)/100;
+			var a = Math.atan2(y,x);
+			if (r <= nearFieldGridRadius) {
+				nearFieldGrid.push({x:x, y:y, r:r, a:a});
+			}
+		}
+	}
+	nearFieldGrid = nearFieldGrid.sort( function (a,b) { return (a.r == b.r) ? (a.a - b.a) : (a.r - b.r);} );
 }
 
 function start() {
@@ -105,11 +120,6 @@ function renderTime() {
 }
 
 function updateData() {
-	var pointList = [];
-	data.points.forEach(function (point, index) {
-		pointList[index] = [];
-	})
-
 	data.matrix.forEach(function (times, index) {
 		var timeId = time2index[Math.floor(currentTime)];
 
@@ -129,64 +139,169 @@ function updateData() {
 		var client = clients[index];
 		if (client.point != point) {
 			if (valid(point)) {
-				client.x0 = data.points[point].x;
-				client.y0 = data.points[point].y;
+				client.x0 = data.points[point].x*width;
+				client.y0 = data.points[point].y*height;
 				client.r0 = 1;
 				if (!valid(client.point)) client.x = undefined;
 			} else {
 				client.r0 = 0;
 			}
 			client.point = point;
+			client.lastEvent = currentTime;
+			client.settled = false;
 		}
-		if (valid(client.point)) pointList[client.point].push(index);
-	});
-
-	pointList.forEach(function (clientList, pointIndex) {
-		var point = data.points[pointIndex];
-		var x0 = Math.round(point.x*width);
-		var y0 = Math.round(point.y*height);
-		clientList.forEach(function (clientIndex, index) {
-			var client = clients[clientIndex];
-			client.x0 = x0 + circlePoints[index].x*3;
-			client.y0 = y0 + circlePoints[index].y*3;
-			if (client.x === undefined) {
-				client.x = client.x0;
-				client.y = client.y0;
-			}
-		})
-
 	});
 }
 
 function updatePosition() {
-	if (jump) {
-		clients.forEach(function (client) {
-			client.x = client.xo = client.x0;
-			client.y = client.yo = client.y0;
-			client.r = client.r0;
-		});
-	} else {
-		clients.forEach(function (client) {
-			client.xo = client.x;
-			client.yo = client.y;
-
-			var dx = (client.x0 - client.x);
-			var dy = (client.y0 - client.y);
-			var r = Math.sqrt(dx*dx + dy*dy);
-			if (r > 1e-2) {
-				var rn = Math.max(r-stepSize, 0);
-				var f = 1-rn/r;
-
-				client.x += (client.x0 - client.x)*f;
-				client.y += (client.y0 - client.y)*f;
-			} else {
-				client.x = client.x0;
-				client.y = client.y0;
-			}
-			client.r += (client.r0 - client.r)*decay;
-		});
+	for (var x = -nearFieldGridRadius; x < width/gridSize + nearFieldGridRadius; x++) {
+		for (var y = -nearFieldGridRadius; y < height/gridSize + nearFieldGridRadius; y++) {
+			grid[x][y] = ((x >= 0) && (x < width/gridSize) && (y >= 0) && (y < height/gridSize));
+		}
 	}
-	jump = false;
+
+	clients.forEach(function (client) {
+		client.r += (client.r0 - client.r)*decay;
+		client.r = client.r0;
+		
+		if (!valid(client.point) && (client.r < 1e-2)) {
+			client.valid = false;
+			return;
+		} else {
+			client.valid = true;
+		}
+
+		if (client.settled) {
+			var x = Math.round(client.x/gridSize);
+			var y = Math.round(client.y/gridSize);
+			if (grid[x][y]) {
+				grid[x][y] = false;
+				client.x = x*gridSize;
+				client.y = y*gridSize;
+			} else {
+				client.settled = false;
+			}
+		}
+	});
+
+	clients.forEach(function (client) {
+		if (!client.valid) return;
+
+		client.xo = client.x;
+		client.yo = client.y;
+
+		var gridx0 = Math.round(client.x0/gridSize);
+		var gridy0 = Math.round(client.y0/gridSize);
+
+		if (client.x === undefined) {
+			// Punkt ist neu, also finde einen neuen Ort zum settlen
+			for (var i = 0; i < nearFieldGrid.length; i++) {
+				var p = nearFieldGrid[i];
+				if (grid[gridx0+p.x][gridy0+p.y]) {
+					grid[gridx0+p.x][gridy0+p.y] = false;
+					client.x = (gridx0+p.x)*gridSize;
+					client.y = (gridy0+p.y)*gridSize;
+					client.settled = true;
+					break;
+				}
+			}
+		} else {
+			if (!client.settled) {
+				// Kommt gerade von wo anders her
+
+				var xn, yn;
+				var dx = (client.x0 - client.x);
+				var dy = (client.y0 - client.y);
+				var r = Math.sqrt(dx*dx + dy*dy);
+				if (r > 1e-2) {
+					var rn = Math.max(r-stepSize, 0);
+					var f = 1-rn/r;
+
+					xn = client.x + (client.x0 - client.x)*f;
+					yn = client.y + (client.y0 - client.y)*f;
+				} else {
+					xn = client.x0;
+					yn = client.y0;
+				}
+
+				var dx = (client.x0 - xn);
+				var dy = (client.y0 - yn);
+				var r = Math.sqrt(dx*dx + dy*dy);
+				if (r < nearFieldRadius) {
+					xn = Math.round(xn/gridSize);
+					yn = Math.round(yn/gridSize);
+					if (grid[xn][yn]) {
+						client.x = xn*gridSize;
+						client.y = yn*gridSize;
+					} else {
+						var rMin = 1e10;
+						var pMin = false;
+						var gridx = Math.round(client.xo/gridSize);
+						var gridy = Math.round(client.yo/gridSize);
+						for (var i = 0; i < stepGrid.length; i++) {
+							var p = stepGrid[i];
+							if (grid[gridx+p.x][gridy+p.y]) {
+								var dxn = client.x0 - (gridx + p.x)*gridSize;
+								var dyn = client.y0 - (gridy + p.y)*gridSize;
+								var rn = Math.sqrt(dxn*dxn + dyn*dyn);
+								if (rn < rMin) {
+									rMin = rn;
+									pMin = p;
+								}
+							}
+						}
+						if (pMin) {
+							grid[gridx+pMin.x][gridy+pMin.y] = false;
+							client.x = (gridx + pMin.x)*gridSize;
+							client.y = (gridy + pMin.y)*gridSize;
+							client.settled = true;
+						}
+					}
+				} else {
+					client.x = xn;
+					client.y = yn;
+				}
+
+			}
+		}
+	});
+
+	clients.forEach(function (client) {
+		if (!client.valid) return;
+
+		if (client.settled) {
+			var gridx0 = Math.round(client.x0/gridSize);
+			var gridy0 = Math.round(client.y0/gridSize);
+			var gridx  = Math.round(client.x /gridSize);
+			var gridy  = Math.round(client.y /gridSize);
+
+			var dxmin = 0;
+			var dymin = 0;
+
+			var dx = (gridx-gridx0);
+			var dy = (gridy-gridy0);
+			var rMin = dx*dx + dy*dy - 1e-5;
+			for (var dxg = -1; dxg <= 1; dxg++) {
+				for (var dyg = -1; dyg <= 1; dyg++) {
+					if (grid[gridx+dxg][gridy+dyg]) {
+						var dx = (gridx+dxg-gridx0);
+						var dy = (gridy+dyg-gridy0);
+						var r = dx*dx + dy*dy;
+						if (r < rMin) {
+							rMin = r;
+							dxmin = dxg;
+							dymin = dyg;
+						}
+					}
+				}
+			}
+			grid[gridx][gridy] = true;
+			grid[gridx + dxmin][gridy + dymin] = false;
+			client.x = (gridx + dxmin)*gridSize;
+			client.y = (gridy + dymin)*gridSize;
+			//nachrücken
+		}
+	});
 }
 
 function renderCanvas() {
@@ -194,13 +309,13 @@ function renderCanvas() {
 	context.fillStyle = '#000';
 
 	clients.forEach(function (client) {
-		if (client.r > 1e-2) {
+		if (client.valid) {
 			var dx = client.x - client.xo;
 			var dy = client.y - client.yo;
 			var r = Math.sqrt(dx*dx + dy*dy);
 
 			if (r > 1) {
-				var a = Math.min(Math.pow(1/r, 0.5), 1);
+				var a = Math.min(Math.pow(1/r, 0.8), 1);
 				context.strokeStyle = 'rgba(0,0,0,'+a+')';
 				context.lineWidth = client.r*2*radius;
 				context.beginPath();
@@ -215,6 +330,26 @@ function renderCanvas() {
 			}
 		}
 	});
+
+	/*
+	context.fillStyle = 'rgba(255,0,0,0.5)';
+	for (var x = 0; x < width/gridSize; x++) {
+		for (var y = 0; y < height/gridSize; y++) {
+			if (!grid[x][y]) {
+				context.beginPath();
+				context.arc(x*gridSize, y*gridSize, 1, 0, 2*Math.PI, false);
+				context.fill();
+			}
+		}
+	}
+
+	context.fillStyle = 'rgba(0,255,0,0.5)';
+	debugList.forEach(function (p) {
+		context.beginPath();
+		context.arc(p.x, p.y, 1, 0, 2*Math.PI, false);
+		context.fill();
+	});
+	*/	
 }
 
 function valid(point) {
