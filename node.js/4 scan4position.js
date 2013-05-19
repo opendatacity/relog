@@ -31,7 +31,7 @@ var times = new Lookup();
 log.forEach(function (entry) {
 	if (accesspoints[entry.access_point] === undefined) return;
 
-	entry.time = ((new Date(entry.date)).getTime()-1367712000000)/60000+60;
+	entry.time = ((new Date(entry.date)).getTime()-1367712000000)/60000+120;
 	times.add(entry.time);
 
 	macs.add(entry.mac_hash);
