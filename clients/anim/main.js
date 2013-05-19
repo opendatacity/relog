@@ -4,8 +4,8 @@ var context;
 var width = 1024;
 var height = 500;
 
-var decay = 0.5;
-var timeStep = 0.5;
+var timeStep = 0.2;
+var decay = Math.pow(0.8, 1/timeStep);
 var stepSize = 50*timeStep;
 var frameDuration = 40;
 var radius = 1.4;
@@ -18,6 +18,7 @@ var circlePoints = [];
 $(function () {
 	init();
 	start();
+	setTimeout(stop, 30000);
 })
 
 function init() {
@@ -66,7 +67,6 @@ function init() {
 
 function start() {
 	if (!interval) interval = setInterval(update, frameDuration);
-	setTimeout(stop, 10000);
 }
 
 function stop() {
