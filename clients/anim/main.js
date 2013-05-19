@@ -111,10 +111,20 @@ function updateData() {
 	})
 
 	data.matrix.forEach(function (times, index) {
-		var timeId = time2index[Math.floor(currentTime + 15*random[index])];
+		var timeId = time2index[Math.floor(currentTime)];
 
 		var point = undefined;
-		if (isFinite(times[timeId])) point = times[timeId];
+		
+		var t0 = data.times[timeId];   if (isNaN(t0)) t0 = 0;
+		var t1 = data.times[timeId+1]; if (isNaN(t1)) t1 = 1e10;
+		
+		var offset = (currentTime-t0)/(t1-t0);
+
+		if (offset < random[index]) {
+			point = times[timeId-1];
+		} else {
+			point = times[timeId];
+		}
 
 		var client = clients[index];
 		if (client.point != point) {
