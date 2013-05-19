@@ -44,6 +44,10 @@ function init() {
 		})();
 	}
 
+	var node = $('<span class="button">Stop</span>');
+	node.click(stop);
+	menu.append(node);
+
 	var index = -1;
 	for (var time = -60; time <= (4*24+1)*60; time++) {
 		while (data.times[index+1] <= time) index++;
