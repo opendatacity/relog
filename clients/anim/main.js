@@ -1,12 +1,12 @@
 var currentTime = 60*(24*1+10.4);
 var clients = [];
 var context;
-var width = 1024;
+var width = 980;
 var height = 500;
 var gridSize = 3;
 var nearFieldRadius = 30;
 
-var timeStep = 0.2;
+var timeStep = 0.5;
 var decay = Math.pow(0.8, 1/timeStep);
 var stepSize = 50*timeStep;
 var frameDuration = 40;
@@ -26,8 +26,8 @@ for (var x = -nearFieldGridRadius; x < width/gridSize+nearFieldGridRadius; x++) 
 
 $(function () {
 	init();
-	start();
-	setTimeout(stop, 60000);
+	//start();
+	//setTimeout(stop, 60000);
 })
 
 function init() {
@@ -38,6 +38,7 @@ function init() {
 		random[index] = Math.random();
 	});
 	
+	/*
 	var menu = $('#menu');
 	for (var i = 2; i < 16; i++) {
 		(function () {
@@ -57,6 +58,7 @@ function init() {
 	var node = $('<span class="button">Stop</span>');
 	node.click(stop);
 	menu.append(node);
+	*/
 
 	var index = -1;
 	for (var time = -60; time <= (4*24+1)*60; time++) {
@@ -315,7 +317,7 @@ function renderCanvas() {
 			var r = Math.sqrt(dx*dx + dy*dy);
 
 			if (r > 1) {
-				var a = Math.min(Math.pow(1/r, 0.8), 1);
+				var a = Math.min(Math.pow(1/r, 0.7), 1);
 				context.strokeStyle = 'rgba(0,0,0,'+a+')';
 				context.lineWidth = client.r*2*radius;
 				context.beginPath();
