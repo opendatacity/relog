@@ -6,12 +6,14 @@
 		<script type="text/javascript" src="data.js"></script>
 		<script type="text/javascript" src="main.js"></script>
 		<style type="text/css">
-			body {
 			#header {
 				width: 980px;
 				margin: auto;
 			}
+			#content {
 				position: relative;
+				width: 980px;
+				margin: auto;
 			}
 			#canvas, #map {
 				position: absolute;
@@ -20,7 +22,7 @@
 			}
 			#timer {
 				position: absolute;
-				top: 520;
+				top: 520px;
 				left: 0px;
 				font-size: 20px;
 				font-family: georgia;
@@ -36,13 +38,169 @@
 				padding: 3px;
 				cursor: pointer;
 			}
+			#slider {
+				position: absolute;
+				top: 600px;
+				width: 980px;
+				height: 50px;
+			}
+			#sliderWrapper {
+				width: 980px;
+				height: 50px;
+				overflow: scroll;
+				position: absolute;
+			}
+			#sliderInner {
+				width: 6120px;
+				height: 50px;
+				background: #f7f7f7;
+				position: relative;
+				left: -420px;
+			}
+			.marker {
+				position: absolute;
+				left: 480px;
+				border-left:  1px solid rgba(0,0,0,0.1);
+				height: 50px;
+			}
+			.hour {
+				position: absolute;
+				top: 30px;
+				height: 20px;
+				border-left: 1px solid #bbb;
+				color: #888;
+				font-family: Helvetica, Verdana, Arial, sans-serif;
+				font-size: 10px;
+				padding-left: 3px;
+			}
+			.hour span {
+				position: absolute;
+				bottom: 2px;
+			}
+			.day {
+				position: absolute;
+				top: 0px;
+				height: 50px;
+				color: #888;
+				font-family: Helvetica, Verdana, Arial, sans-serif;
+				font-size: 12px;
+				padding-left: 3px;
+				width: 100px;
+			}
+			.day.b {
+				border-left: 1px solid #888;
+			}
 		</style>
 	</head>
 	<body>
-		<img id="map" src="map.jpg" width="1024" height="500">
-		<canvas id="canvas" width="1024" height="500"></canvas>
-		<div id="timer"></div>
-		<div id="menu"></div>
 		<div id="header"><img src="top.png"></div>
+		<div id="content">
+			<img id="map" src="map.jpg" width="980" height="500">
+			<canvas id="canvas" width="980" height="500"></canvas>
+			<div id="timer"></div>
+			<div id="slider">
+				<div id="sliderWrapper">
+					<div id="sliderInner">
+						<div class="hour" style="left:900px"><span>15:00</span></div>
+						<div class="hour" style="left:960px"></div>
+						<div class="hour" style="left:1020px"></div>
+						<div class="hour" style="left:1080px"><span>18:00</span></div>
+						<div class="hour" style="left:1140px"></div>
+						<div class="hour" style="left:1200px"></div>
+						<div class="hour" style="left:1260px"><span>21:00</span></div>
+						<div class="hour" style="left:1320px"></div>
+						<div class="hour" style="left:1380px"></div>
+						<div class="hour" style="left:1440px"><span>0:00</span></div>
+						<div class="hour" style="left:1500px"></div>
+						<div class="hour" style="left:1560px"></div>
+						<div class="hour" style="left:1620px"><span>3:00</span></div>
+						<div class="hour" style="left:1680px"></div>
+						<div class="hour" style="left:1740px"></div>
+						<div class="hour" style="left:1800px"><span>6:00</span></div>
+						<div class="hour" style="left:1860px"></div>
+						<div class="hour" style="left:1920px"></div>
+						<div class="hour" style="left:1980px"><span>9:00</span></div>
+						<div class="hour" style="left:2040px"></div>
+						<div class="hour" style="left:2100px"></div>
+						<div class="hour" style="left:2160px"><span>12:00</span></div>
+						<div class="hour" style="left:2220px"></div>
+						<div class="hour" style="left:2280px"></div>
+						<div class="hour" style="left:2340px"><span>15:00</span></div>
+						<div class="hour" style="left:2400px"></div>
+						<div class="hour" style="left:2460px"></div>
+						<div class="hour" style="left:2520px"><span>18:00</span></div>
+						<div class="hour" style="left:2580px"></div>
+						<div class="hour" style="left:2640px"></div>
+						<div class="hour" style="left:2700px"><span>21:00</span></div>
+						<div class="hour" style="left:2760px"></div>
+						<div class="hour" style="left:2820px"></div>
+						<div class="hour" style="left:2880px"><span>0:00</span></div>
+						<div class="hour" style="left:2940px"></div>
+						<div class="hour" style="left:3000px"></div>
+						<div class="hour" style="left:3060px"><span>3:00</span></div>
+						<div class="hour" style="left:3120px"></div>
+						<div class="hour" style="left:3180px"></div>
+						<div class="hour" style="left:3240px"><span>6:00</span></div>
+						<div class="hour" style="left:3300px"></div>
+						<div class="hour" style="left:3360px"></div>
+						<div class="hour" style="left:3420px"><span>9:00</span></div>
+						<div class="hour" style="left:3480px"></div>
+						<div class="hour" style="left:3540px"></div>
+						<div class="hour" style="left:3600px"><span>12:00</span></div>
+						<div class="hour" style="left:3660px"></div>
+						<div class="hour" style="left:3720px"></div>
+						<div class="hour" style="left:3780px"><span>15:00</span></div>
+						<div class="hour" style="left:3840px"></div>
+						<div class="hour" style="left:3900px"></div>
+						<div class="hour" style="left:3960px"><span>18:00</span></div>
+						<div class="hour" style="left:4020px"></div>
+						<div class="hour" style="left:4080px"></div>
+						<div class="hour" style="left:4140px"><span>21:00</span></div>
+						<div class="hour" style="left:4200px"></div>
+						<div class="hour" style="left:4260px"></div>
+						<div class="hour" style="left:4320px"><span>0:00</span></div>
+						<div class="hour" style="left:4380px"></div>
+						<div class="hour" style="left:4440px"></div>
+						<div class="hour" style="left:4500px"><span>3:00</span></div>
+						<div class="hour" style="left:4560px"></div>
+						<div class="hour" style="left:4620px"></div>
+						<div class="hour" style="left:4680px"><span>6:00</span></div>
+						<div class="hour" style="left:4740px"></div>
+						<div class="hour" style="left:4800px"></div>
+						<div class="hour" style="left:4860px"><span>9:00</span></div>
+						<div class="hour" style="left:4920px"></div>
+						<div class="hour" style="left:4980px"></div>
+						<div class="hour" style="left:5040px"><span>12:00</span></div>
+						<div class="hour" style="left:5100px"></div>
+						<div class="hour" style="left:5160px"></div>
+						<div class="hour" style="left:5220px"><span>15:00</span></div>
+						<div class="hour" style="left:5280px"></div>
+						<div class="hour" style="left:5340px"></div>
+						<div class="hour" style="left:5400px"><span>18:00</span></div>
+						<div class="hour" style="left:5460px"></div>
+						<div class="hour" style="left:5520px"></div>
+						<div class="hour" style="left:5580px"><span>21:00</span></div>
+						<div class="hour" style="left:5640px"></div>
+						<div class="day b" style="left:   0px"><span>Aufbautag</span></div>
+						<div class="day n" style="left: 360px"><span>Aufbautag</span></div>
+						<div class="day n" style="left: 720px"><span>Aufbautag</span></div>
+						<div class="day n" style="left:1080px"><span>Aufbautag</span></div>
+						<div class="day b" style="left:1440px"><span>Tag 1</span></div>
+						<div class="day n" style="left:1880px"><span>Tag 1</span></div>
+						<div class="day n" style="left:2160px"><span>Tag 1</span></div>
+						<div class="day n" style="left:2520px"><span>Tag 1</span></div>
+						<div class="day b" style="left:2880px"><span>Tag 2</span></div>
+						<div class="day n" style="left:3240px"><span>Tag 2</span></div>
+						<div class="day n" style="left:3600px"><span>Tag 2</span></div>
+						<div class="day n" style="left:3960px"><span>Tag 2</span></div>
+						<div class="day b" style="left:4320px"><span>Tag 3</span></div>
+						<div class="day n" style="left:4680px"><span>Tag 3</span></div>
+						<div class="day n" style="left:5040px"><span>Tag 3</span></div>
+						<div class="day n" style="left:5400px"><span>Tag 3</span></div>
+					</div>
+				</div>
+				<div class="marker"></div>
+			</div>
+		</div>
 	</body>
 </html>
