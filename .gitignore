@@ -1,4 +1,3 @@
-
 sources/
 Analyse/
 backups/
@@ -6,5 +5,5 @@ cleaned/rp13-arr-pretty.json
 cleaned/rp13-arr.json
 cleaned/rp13-obj-pretty.json
 cleaned/rp13-obj.json
-cleaned/rp13-obj.csv
-cleaned/rp13-obj.tsv
+cleaned/rp13.csv
+cleaned/rp13.tsv
