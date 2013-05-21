@@ -181,7 +181,22 @@ function updateData() {
 			}
 		}
 	});
-	for (var i = 1; i <= 7; i++) $('#stage'+i).html(stages[i]);
+	for (var i = 1; i <= 7; i++) (function () {
+		var node = $('#stage'+i);
+		var oldText = node.attr('oldText');
+		var newText = stages[i];
+		node.attr('oldText', newText);
+
+		if (oldText != newText) {
+			if (mouseDrag) {
+				node.html(newText);
+			} else {
+				node.stop(true);
+				node.fadeOut(100, function () { node.html(newText); });
+				node.fadeIn(100);
+			}
+		}
+	})();
 
 
 	data.matrix.forEach(function (times, index) {
