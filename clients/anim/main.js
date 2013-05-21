@@ -47,6 +47,28 @@ function setSpeed(speed) {
 	$('#speed'+speed).addClass('active');
 }
 
+var mouseDragX0, dragTime, mouseDrag = false;
+function sliderDragMove(event) {
+	if (mouseDrag) {
+		currentTime = dragTime + (mouseDragX0 - event.pageX);
+
+		updateFrame();
+		event.preventDefault();
+		return false;
+	} else {
+		mouseDragX0 = event.pageX;
+	}
+}
+
+function sliderDragStart() {
+	mouseDrag = true;
+	dragTime = currentTime;
+}
+
+function sliderDragStop() {
+	mouseDrag = false; 
+}
+
 function init() {
 	context = $('#canvas')[0].getContext('2d');
 	clients = [];
@@ -59,6 +81,11 @@ function init() {
 	$('#speed1').click(function () { setSpeed(1); });
 	$('#speed2').click(function () { setSpeed(2); });
 	$('#speed3').click(function () { setSpeed(3); });
+
+	$('#sliderWrapper').mousedown(function () { sliderDragStart(); });
+	$(document).mousemove(function (e) { return sliderDragMove(e); });
+	$(document).mouseup(function (e) { sliderDragStop(); });
+	$(document).on('selectstart', function () { return !mouseDrag; });
 
 	var index = -1;
 	for (var time = -60; time <= (4*24+1)*60; time++) {
@@ -114,6 +141,8 @@ function togglePlay() {
 }
 
 function update() {
+	if (mouseDrag) return;
+
 	currentTime += timeStep;
 	if (currentTime > maxTime) {
 		currentTime = maxTime;
@@ -122,6 +151,10 @@ function update() {
 
 	if (currentTime < minTime) currentTime = minTime;
 
+	updateFrame();
+}
+
+function updateFrame() {
 	renderTime();
 	updateData();
 	updatePosition();
@@ -155,6 +188,7 @@ function updateData() {
 		var timeId = time2index[Math.floor(currentTime)];
 
 		var point = undefined;
+		var pointBefore = undefined;
 		
 		var t0 = data.times[timeId];   if (isNaN(t0)) t0 = 0;
 		var t1 = data.times[timeId+1]; if (isNaN(t1)) t1 = 1e10;
@@ -162,24 +196,34 @@ function updateData() {
 		var offset = (currentTime-t0)/(t1-t0);
 
 		if (offset < random[index]) {
-			point = times[timeId-1];
+			pointBefore = times[timeId-2];
+			point       = times[timeId-1];
 		} else {
-			point = times[timeId];
+			pointBefore = times[timeId-1];
+			point       = times[timeId];
 		}
+
+		if (!valid(pointBefore)) pointBefore = undefined;
+		if (!valid(point)) point = undefined;
 
 		var client = clients[index];
 		if (client.point != point) {
-			if (valid(point)) {
+			if (point !== undefined) {
 				client.x0 = data.points[point].x*width;
 				client.y0 = data.points[point].y*height;
 				client.r0 = 1;
-				if (!valid(client.point)) client.x = undefined;
+				if (client.point === undefined) client.x = undefined;
 			} else {
 				client.r0 = 0;
 			}
 			client.point = point;
 			client.lastEvent = currentTime;
 			client.settled = false;
+
+			if (mouseDrag) {
+				client.x = undefined;
+				client.y = client.y0;
+			}
 		}
 	});
 }
@@ -345,7 +389,7 @@ function renderCanvas() {
 			var dy = client.y - client.yo;
 			var r = Math.sqrt(dx*dx + dy*dy);
 
-			if (r > 1) {
+			if ((r > 1) && (!client.settled)) {
 				var a = Math.min(Math.pow(1/r, 0.7), 1);
 				context.strokeStyle = 'rgba(0,0,0,'+a+')';
 				context.lineWidth = client.r*2*radius;
