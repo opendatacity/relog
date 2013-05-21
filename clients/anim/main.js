@@ -1,4 +1,4 @@
-var currentTime = 60*(24*1+10.4);
+var currentTime = 60*(24*1+10);
 var clients = [];
 var context;
 var width = 980;
@@ -6,7 +6,7 @@ var height = 490;
 var gridSize = 3;
 var nearFieldRadius = 30;
 
-var timeStep = 0.5;
+var timeStep = 500/1500; (250, 500, 1000)
 var decay = Math.pow(0.8, 1/timeStep);
 var stepSize = 50*timeStep;
 var frameDuration = 40;
@@ -26,8 +26,8 @@ for (var x = -nearFieldGridRadius; x < width/gridSize+nearFieldGridRadius; x++) 
 
 $(function () {
 	init();
-	//start();
-	//setTimeout(stop, 60000);
+	start();
+	setTimeout(stop, 10000);
 })
 
 function init() {
@@ -97,6 +97,8 @@ function renderTime() {
 	h = (h+100+'').substr(1);
 	m = (m+100+'').substr(1);
 	$('#timer').html('Tag '+d+' - '+h+':'+m);
+
+	$('#sliderInner').css('left', -(currentTime-8*60));
 }
 
 function updateData() {
