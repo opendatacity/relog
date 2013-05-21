@@ -61,29 +61,71 @@
 			}
 			#slider {
 				position: absolute;
-				top: 530px;
-				left: 60px;
-				width: 920px;
+				width: 980px;
 				height: 50px;
-				border-top: 1px solid #aaa;
-				border-bottom: 1px solid #aaa;
+				top: 530px;
+				left: 0px;
+			}
+			#play {
+				top: 0px;
+				left: 0px;
+				width: 50px;
+				height: 50px;
+				background: #eee;
+				border: 1px solid #aaa;
+				font-size: 12px;
+				text-align: center;
+				line-height: 15px;
+				border-radius: 10px;
+				background-image: url(play-pause.png);
+				background-repeat: no-repeat;
+				background-position: -50px 0px;
+				cursor: pointer;
+			}
+			#play.pause {
+				background-position: 0px 0px;
+			}
+			.speed {
+				width: 35px;
+				height: 13px;
+				position: absolute;
+				background: #eee;
+				color: #888;
+				border: 1px solid #aaa;
+				font-size: 11px;
+				left: 55px;
+				padding-top: 1px;
+				top: 0px;
+				text-align: center;
+				border-radius: 5px;
+				cursor: pointer;
+			}
+			.speed.active {
+				color: #000;
 			}
 			#sliderWrapper {
-				width: 920px;
+				width: 883px;
 				height: 50px;
+				border-radius: 10px;
 				overflow: hidden;
 				position: absolute;
+				top: 0px;
+				left: 95px;
+				border: 1px solid #aaa;
+				cursor: pointer;
 			}
 			#sliderInner {
 				width: 6140px;
 				height: 50px;
 				position: relative;
 				left: -420px;
+				top: 0px;
 			}
 			.marker {
 				position: absolute;
-				left: 480px;
-				border-left:  3px solid rgba(0,0,0,0.5);
+				left: 537px;
+				top: 1px;
+				border-left:  2px solid rgba(0,0,0,0.5);
 				height: 50px;
 			}
 			.hour {
@@ -140,6 +182,12 @@
 			</div>
 			<div id="timer"></div>
 			<div id="slider">
+				<div id="play"></div>
+
+				<div id="speed1" class="speed" style="top: 0px">250</div>
+				<div id="speed2" class="speed" style="top:18px">500</div>
+				<div id="speed3" class="speed" style="top:36px">1000</div>
+
 				<div id="sliderWrapper">
 					<div id="sliderInner">
 						<div class="hour n" style="left:900px"><span>15:00</span></div>

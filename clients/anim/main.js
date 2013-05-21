@@ -1,4 +1,4 @@
-var startTime = (24*1 +  9)*60;
+var startTime = (24*1 + 14)*60;
 var minTime =   (24*0 + 12)*60;
 var maxTime =   (24*4 + 22)*60;
 
@@ -11,8 +11,8 @@ var height = 490;
 var gridSize = 3;
 var nearFieldRadius = 30;
 
-var timeStep = 500/1500; (250, 500, 1000)
-var decay = Math.pow(0.8, 1/timeStep);
+var timeStep = 1000/1500; (250, 500, 1000)
+var decay = Math.pow(0.8, 5);
 var stepSize = 50*timeStep;
 var frameDuration = 40;
 var radius = 1.4;
@@ -31,17 +31,34 @@ for (var x = -nearFieldGridRadius; x < width/gridSize+nearFieldGridRadius; x++) 
 
 $(function () {
 	init();
-	start();
-	//setTimeout(stop, 60000);
+	setSpeed(2);
+	startPlay();
+	//update();
+	setTimeout(stopPlay, 10000);
 })
+
+function setSpeed(speed) {
+	timeStep = Math.pow(2, speed)*125/1500;
+	stepSize = 50*timeStep;
+	stepGridRadius = Math.ceil(stepSize/gridSize);
+	nearFieldGridRadius = Math.ceil(nearFieldRadius/gridSize);
+
+	$('.speed').removeClass('active');
+	$('#speed'+speed).addClass('active');
+}
 
 function init() {
 	context = $('#canvas')[0].getContext('2d');
 	clients = [];
 	data.matrix.forEach(function (times, index) {
-		clients[index] = {point:undefined, x:0, y:0, r:0, x0:0, y0:0, r0:0, index:index, lastEvent:0};
+		clients[index] = { point:undefined, x:0, y:0, r:0, x0:0, y0:0, r0:0, index:index, lastEvent:0 };
 		random[index] = Math.random();
 	});
+
+	$('#play').click(togglePlay);
+	$('#speed1').click(function () { setSpeed(1); });
+	$('#speed2').click(function () { setSpeed(2); });
+	$('#speed3').click(function () { setSpeed(3); });
 
 	var index = -1;
 	for (var time = -60; time <= (4*24+1)*60; time++) {
@@ -77,27 +94,33 @@ function init() {
 	})
 }
 
-function start() {
-	if (!interval) interval = setInterval(update, frameDuration);
+function startPlay() {
+	if (!interval) {
+		interval = setInterval(update, frameDuration);
+		$('#play').removeClass('pause');
+	}
 }
 
-function stop() {
+function stopPlay() {
 	if (interval) {
 		clearInterval(interval);
 		interval = false;
+		$('#play').addClass('pause');
 	}
+}
+
+function togglePlay() {
+	if (interval) stopPlay(); else startPlay();
 }
 
 function update() {
 	currentTime += timeStep;
 	if (currentTime > maxTime) {
 		currentTime = maxTime;
-		stop();
+		stopPlay();
 	}
 
-	if (currentTime < minTime) {
-		currentTime = minTime;
-	}
+	if (currentTime < minTime) currentTime = minTime;
 
 	renderTime();
 	updateData();
@@ -113,7 +136,7 @@ function renderTime() {
 	m = (m+100+'').substr(1);
 	$('#timer').html('Tag '+d+' - '+h+':'+m);
 
-	$('#sliderInner').css('left', -(currentTime-8*60));
+	$('#sliderInner').css('left', -(currentTime-441));
 }
 
 function updateData() {
