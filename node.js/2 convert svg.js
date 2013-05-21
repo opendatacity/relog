@@ -1,4 +1,4 @@
-var svg = '../sources/access points_wtf2d.svg';
+var svg = '../sources/access points_redrawn-0.1.0-convert.svg';
 
 var fs = require('fs');
 
