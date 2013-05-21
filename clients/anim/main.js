@@ -1,4 +1,4 @@
-var startTime = (24*1 + 14)*60;
+var startTime = (24*1 + 10)*60;
 var minTime =   (24*0 + 12)*60;
 var maxTime =   (24*4 + 22)*60;
 
@@ -34,7 +34,7 @@ $(function () {
 	setSpeed(2);
 	startPlay();
 	//update();
-	setTimeout(stopPlay, 10000);
+	//setTimeout(stopPlay, 10000);
 })
 
 function setSpeed(speed) {
