@@ -64,6 +64,12 @@ function init() {
 		}
 	}
 	nearFieldGrid = nearFieldGrid.sort( function (a,b) { return (a.r == b.r) ? (a.a - b.a) : (a.r - b.r);} );
+
+	sessions.forEach(function (session) {
+		session.startTime = session.startInt + (parseInt(session.date.substr(8,2),10)-5)*(24*60);
+		session.endTime   = session.startTime + session.duration;
+		session.stage     = (session.room.substr(0,5) == 'stage') ? parseInt(session.room.substr(6,1), 10) : undefined;
+	})
 }
 
 function start() {
@@ -102,6 +108,17 @@ function renderTime() {
 }
 
 function updateData() {
+	var stages = ['', '', '', '', '', '', '', ''];
+	sessions.forEach(function (session) {
+		if ((session.startTime <= currentTime) && (currentTime < session.endTime)) {
+			if (session.stage !== undefined) {
+				stages[session.stage] = 'Stage '+session.stage+': '+session.title;
+			}
+		}
+	});
+	for (var i = 1; i <= 7; i++) $('#stage'+i).html(stages[i]);
+
+
 	data.matrix.forEach(function (times, index) {
 		var timeId = time2index[Math.floor(currentTime)];
 

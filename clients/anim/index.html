@@ -32,18 +32,22 @@
 			.label {
 				color: #00a0cc;
 				font-size: 11px;
-				max-width: 140px;
-				max-height: 38px;
+				width: 140px;
+				height: 38px;
 				padding: 3px;
 				overflow: hidden;
 				word-wrap: break-word;
+			}
+			.label.grey {
+				color: #888;
 			}
 			#timer {
 				position: absolute;
 				top: 40px;
 				right: 20px;
 				font-size: 16px;
-				color: #888;			}
+				color: #888;
+			}
 			#menu {
 				position: absolute;
 				top: 550px;
@@ -119,18 +123,18 @@
 			<div id="container">
 				<img id="map" src="map.png" width="980" height="490">
 				<canvas id="canvas" width="980" height="490"></canvas>
-				<div class="label" style="left: 33px;top:210px" id="stage1"></div>
-				<div class="label" style="left:470px;top: 30px" id="stage2"></div>
-				<div class="label" style="left:150px;top:330px" id="stage3"></div>
-				<div class="label" style="left:340px;top:342px" id="stage4"></div>
-				<div class="label" style="left:550px;top:342px" id="stage5"></div>
-				<div class="label" style="left:740px;top:342px" id="stage6"></div>
-				<div class="label" style="left:780px;top:440px" id="stage7"></div>
-				<div class="label" style="left:320px;top:140px">Cafeteria</div>
-				<div class="label" style="left:850px;top:220px">Hof</div>
-				<div class="label" style="left:920px;top:320px">VIP</div>
-				<div class="label" style="left:480px;top:410px">Workshops</div>
-				<div class="label" style="left:570px;top:170px">Foyer</div>
+				<div class="label"      style="left: 33px;top:215px" id="stage1"></div>
+				<div class="label"      style="left:490px;top: 30px" id="stage2"></div>
+				<div class="label"      style="left:150px;top:330px" id="stage3"></div>
+				<div class="label"      style="left:340px;top:342px" id="stage4"></div>
+				<div class="label"      style="left:550px;top:342px" id="stage5"></div>
+				<div class="label"      style="left:740px;top:342px" id="stage6"></div>
+				<div class="label"      style="left:780px;top:440px" id="stage7"></div>
+				<div class="label grey" style="left:320px;top:140px">Cafeteria</div>
+				<div class="label grey" style="left:850px;top:220px">Hof</div>
+				<div class="label grey" style="left:920px;top:320px">VIP</div>
+				<div class="label grey" style="left:480px;top:410px">Workshops</div>
+				<div class="label grey" style="left:570px;top:170px">Foyer</div>
 			</div>
 			<div id="timer"></div>
 			<div id="slider">
