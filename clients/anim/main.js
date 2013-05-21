@@ -1,4 +1,9 @@
-var currentTime = 60*(24*1+10);
+var startTime = (24*1 +  9)*60;
+var minTime =   (24*0 + 12)*60;
+var maxTime =   (24*4 + 22)*60;
+
+
+var currentTime = startTime;
 var clients = [];
 var context;
 var width = 980;
@@ -27,7 +32,7 @@ for (var x = -nearFieldGridRadius; x < width/gridSize+nearFieldGridRadius; x++) 
 $(function () {
 	init();
 	start();
-	setTimeout(stop, 10000);
+	//setTimeout(stop, 60000);
 })
 
 function init() {
@@ -85,9 +90,13 @@ function stop() {
 
 function update() {
 	currentTime += timeStep;
-	if (currentTime >= 4*24*60) {
+	if (currentTime > maxTime) {
+		currentTime = maxTime;
 		stop();
-		return;
+	}
+
+	if (currentTime < minTime) {
+		currentTime = minTime;
 	}
 
 	renderTime();
