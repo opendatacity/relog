@@ -475,6 +475,66 @@ function updatePosition() {
 function renderCanvas() {
 	context.clearRect(0, 0, width, height);
 
+	var drawLists = [[],[],[],[]];
+	clients.forEach(function (client) {
+		if (client.valid) {
+			var dx = client.x - client.xo;
+			var dy = client.y - client.yo;
+			var r = Math.sqrt(dx*dx + dy*dy);
+
+			var f = (selectedCount > 0) ? (client.selected ? 1.3 : 0.4) : 1;
+
+			if ((r > 1) && (!client.settled)) {
+				if (client.selected) {
+					drawLists[0].push(client);
+				} else {
+					drawLists[1].push(client);
+				}
+			} else {
+				if (client.selected) {
+					drawLists[2].push(client);
+				} else {
+					drawLists[3].push(client);
+				}
+			}
+		}
+	});
+
+	context.strokeStyle = 'rgba(238,80,0,0.3)';
+	context.lineWidth = 2*radius;
+	context.beginPath();
+	drawLists[0].forEach(function (client) {
+		context.moveTo(client.xo, client.yo);
+		context.lineTo(client.x,  client.y );
+	})
+	context.stroke();
+
+	var a = (selectedCount > 0) ? 0.1 : 0.2;
+	context.strokeStyle = 'rgba(0,0,0,'+a+')';
+	context.lineWidth = 2*radius*((selectedCount > 0) ? 0.4 : 1);
+	context.beginPath();
+	drawLists[1].forEach(function (client) {
+		context.moveTo(client.xo, client.yo);
+		context.lineTo(client.x,  client.y );
+	})
+	context.stroke();
+
+	context.fillStyle = 'rgb(238,80,0)';
+	drawLists[2].forEach(function (client) {
+		context.beginPath();
+		context.arc(client.x, client.y, radius*1.3, 0, 2*Math.PI, false);
+		context.fill();
+	});
+
+	var r = (selectedCount > 0) ? 0.4 : 1;
+	context.fillStyle = 'rgb(0,0,0)';
+	drawLists[3].forEach(function (client) {
+		context.beginPath();
+		context.arc(client.x, client.y, radius*r, 0, 2*Math.PI, false);
+		context.fill();
+	})
+
+/*
 	clients.forEach(function (client) {
 		if (client.valid) {
 			var dx = client.x - client.xo;
@@ -488,7 +548,6 @@ function renderCanvas() {
 
 				context.strokeStyle = (client.selected) ? 'rgba(238,80,0,'+a+')' : 'rgba(0,0,0,'+a+')';
 				context.lineWidth = client.r*2*radius*f;
-				context.lineCap = 'round';
 				context.beginPath();
 				context.moveTo(client.xo, client.yo);
 				context.lineTo(client.x,  client.y );
@@ -502,6 +561,7 @@ function renderCanvas() {
 			}
 		}
 	});
+*/
 
 	if (mapDrag) {
 		var x = Math.min(mouseDragX0, mouseDragX);
