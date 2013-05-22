@@ -1,6 +1,6 @@
 var startTime = (24*1 +  9)*60;
 var minTime =   (24*0 + 12)*60;
-var maxTime =   (24*4 + 22)*60;
+var maxTime =   (24*3 + 22)*60;
 
 
 var currentTime = startTime;
@@ -234,11 +234,11 @@ function updateData() {
 			client.point = point;
 			client.lastEvent = currentTime;
 			client.settled = false;
+		}
 
-			if (mouseDrag) {
-				client.x = undefined;
-				client.y = client.y0;
-			}
+		if (mouseDrag) {
+			client.x = undefined;
+			client.settled = false;
 		}
 	});
 }
