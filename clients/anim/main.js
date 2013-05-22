@@ -509,7 +509,7 @@ function renderCanvas() {
 	})
 	context.stroke();
 
-	var a = (selectedCount > 0) ? 0.1 : 0.2;
+	var a = (selectedCount > 0) ? 0.15 : 0.15;
 	context.strokeStyle = 'rgba(0,0,0,'+a+')';
 	context.lineWidth = 2*radius*((selectedCount > 0) ? 0.4 : 1);
 	context.beginPath();
