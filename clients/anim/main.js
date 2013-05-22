@@ -47,33 +47,72 @@ function setSpeed(speed) {
 	$('#speed'+speed).addClass('active');
 }
 
-var mouseDragX0, dragTime, mouseDrag = false;
-function sliderDragMove(event) {
-	if (mouseDrag) {
-		currentTime = dragTime + (mouseDragX0 - event.pageX);
+var mouseDrag = false;
+var sliderDrag = false;
+var mapDrag = false;
+var mouseDragX0;
+var mouseDragY0;
+var mouseDragX;
+var mouseDragY;
+var sliderDragStartTime;
 
-		updateFrame();
+function sliderDragStart() {
+	mouseDrag = true;
+	sliderDrag = true;
+	sliderDragStartTime = currentTime;
+}
+
+function mapDragStart() {
+	mouseDrag = true;
+	mapDrag = true;
+	mouseDragX = mouseDragX0;
+	mouseDragY = mouseDragY0;
+	clients.forEach(function (c) { c.selected = false; });
+}
+
+function mouseDragMove(event) {
+	if (mouseDrag) {
+		if (sliderDrag) {
+			currentTime = sliderDragStartTime + (mouseDragX0 - event.pageX);
+
+			updateFrame();	
+		}
+		if (mapDrag) {
+			mouseDragX = event.pageX;
+			mouseDragY = event.pageY;
+			var p = $('#container').offset();
+			var x0 = Math.min(mouseDragX0, mouseDragX) - p.left;
+			var x1 = Math.max(mouseDragX0, mouseDragX) - p.left;
+			var y0 = Math.min(mouseDragY0, mouseDragY) - p.top;
+			var y1 = Math.max(mouseDragY0, mouseDragY) - p.top;
+			clients.forEach(function (c) {
+				c.selected = ((c.x >= x0) && (c.x <= x1) && (c.y >= y0) && (c.y <= y1));
+			});
+
+			renderCanvas();
+		}
+
 		event.preventDefault();
 		return false;
 	} else {
 		mouseDragX0 = event.pageX;
+		mouseDragY0 = event.pageY;
 	}
 }
 
-function sliderDragStart() {
-	mouseDrag = true;
-	dragTime = currentTime;
-}
-
-function sliderDragStop() {
+function mouseDragStop() {
 	mouseDrag = false; 
+	sliderDrag = false;
+	mapDrag = false;
+
+	renderCanvas();
 }
 
 function init() {
 	context = $('#canvas')[0].getContext('2d');
 	clients = [];
 	data.matrix.forEach(function (times, index) {
-		clients[index] = { point:undefined, x:0, y:0, r:0, x0:0, y0:0, r0:0, index:index, lastEvent:0 };
+		clients[index] = { point:undefined, x:0, y:0, r:0, x0:0, y0:0, r0:0, index:index, lastEvent:0, selected:false };
 		random[index] = Math.random();
 	});
 
@@ -83,9 +122,11 @@ function init() {
 	$('#speed3').click(function () { setSpeed(3); });
 
 	$('#sliderWrapper').mousedown(function () { sliderDragStart(); });
-	$(document).mousemove(function (e) { return sliderDragMove(e); });
-	$(document).mouseup(function (e) { sliderDragStop(); });
-	$(document).on('selectstart', function () { return !mouseDrag; });
+	$('#container').mousedown(function () { mapDragStart(); });
+	$(document).mousemove(function (e) { return mouseDragMove(e); });
+	$(document).mouseup(function (e) { mouseDragStop(); });
+
+	$(document).on('selectstart', function (e) { e.preventDefault(); return !mouseDrag; });
 
 	var index = -1;
 	for (var time = -60; time <= (4*24+1)*60; time++) {
@@ -144,6 +185,11 @@ function update() {
 	if (mouseDrag) return;
 
 	currentTime += timeStep;
+
+	updateFrame();
+}
+
+function updateFrame() {
 	if (currentTime > maxTime) {
 		currentTime = maxTime;
 		stopPlay();
@@ -151,10 +197,6 @@ function update() {
 
 	if (currentTime < minTime) currentTime = minTime;
 
-	updateFrame();
-}
-
-function updateFrame() {
 	renderTime();
 	updateData();
 	updatePosition();
@@ -396,7 +438,6 @@ function updatePosition() {
 
 function renderCanvas() {
 	context.clearRect(0, 0, width, height);
-	context.fillStyle = '#000';
 
 	clients.forEach(function (client) {
 		if (client.valid) {
@@ -406,7 +447,7 @@ function renderCanvas() {
 
 			if ((r > 1) && (!client.settled)) {
 				var a = Math.min(Math.pow(1/r, 0.7), 1);
-				context.strokeStyle = 'rgba(0,0,0,'+a+')';
+				context.strokeStyle = (client.selected) ? 'rgba(238,0,0,'+a+')' : 'rgba(0,0,0,'+a+')';
 				context.lineWidth = client.r*2*radius;
 				context.beginPath();
 				context.moveTo(client.xo, client.yo);
@@ -414,12 +455,31 @@ function renderCanvas() {
 				context.stroke();
 
 			} else {
+				context.fillStyle = (client.selected) ? '#e00' : '#000';
 				context.beginPath();
 				context.arc(client.x, client.y, client.r*radius, 0, 2*Math.PI, false);
 				context.fill();
 			}
 		}
 	});
+
+	if (mapDrag) {
+		var x = Math.min(mouseDragX0, mouseDragX);
+		var y = Math.min(mouseDragY0, mouseDragY);
+		var w = Math.max(mouseDragX0, mouseDragX) - x;
+		var h = Math.max(mouseDragY0, mouseDragY) - y;
+		var p = $('#container').offset();
+		x -= 0.5 + p.left;
+		y -= 0.5 + p.top;
+
+		context.fillStyle   = 'rgba(238,0,0,0.1)';
+		context.strokeStyle = 'rgba(238,0,0,0.5)';
+		context.lineWidth = 1;
+		context.beginPath();
+		context.rect(x, y, w, h);
+		context.fill();
+		context.stroke();
+	}
 
 	/*
 	context.fillStyle = 'rgba(255,0,0,0.5)';
