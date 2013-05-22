@@ -1,5 +1,5 @@
 var startTime = (24*1 +  9)*60;
-var minTime =   (24*0 + 12)*60;
+var minTime =   (24*0 + 15)*60;
 var maxTime =   (24*3 + 22)*60;
 
 
