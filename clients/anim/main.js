@@ -89,6 +89,8 @@ function mouseDragMove(event) {
 			var y0 = Math.min(mouseDragY0, mouseDragY) - p.top;
 			var y1 = Math.max(mouseDragY0, mouseDragY) - p.top;
 			selectedCount = 0;
+			activeCount = 0;
+			activeSelectedCount = 0;
 			clients.forEach(function (c) {
 				if ((c.x >= x0) && (c.x <= x1) && (c.y >= y0) && (c.y <= y1)) {
 					c.selected = true;
@@ -96,9 +98,14 @@ function mouseDragMove(event) {
 				} else {
 					c.selected = false;
 				}
+				if (c.point !== undefined) {
+					activeCount++;
+					if (c.selected) activeSelectedCount++;
+				}
 			});
 
 			renderCanvas();
+			renderInfos();
 		}
 
 		event.preventDefault();
@@ -201,6 +208,8 @@ function update() {
 	updateFrame();
 }
 
+var activeCount, activeSelectedCount;
+
 function updateFrame() {
 	if (currentTime > maxTime) {
 		currentTime = maxTime;
@@ -209,49 +218,15 @@ function updateFrame() {
 
 	if (currentTime < minTime) currentTime = minTime;
 
-	renderTime();
 	updateData();
 	updatePosition();
+	renderInfos();
 	renderCanvas();
 }
 
-function renderTime() {
-	var d = Math.floor(currentTime/1440);
-	var h = Math.floor(currentTime/60) % 24;
-	var m = Math.floor(currentTime) % 60;
-	h = (h+100+'').substr(1);
-	m = (m+100+'').substr(1);
-	$('#timer').html('Tag '+d+' - '+h+':'+m);
-
-	$('#sliderInner').css('left', -(currentTime-441));
-}
-
 function updateData() {
-	var stages = ['', '', '', '', '', '', '', ''];
-	sessions.forEach(function (session) {
-		if ((session.startTime <= currentTime) && (currentTime < session.endTime)) {
-			if (session.stage !== undefined) {
-				stages[session.stage] = 'Stage '+session.stage+': '+session.title;
-			}
-		}
-	});
-	for (var i = 1; i <= 7; i++) (function () {
-		var node = $('#stage'+i);
-		var oldText = node.attr('oldText');
-		var newText = stages[i];
-		node.attr('oldText', newText);
-
-		if (oldText != newText) {
-			if (mouseDrag) {
-				node.html(newText);
-			} else {
-				node.stop(true);
-				node.fadeOut(100, function () { node.html(newText); });
-				node.fadeIn(100);
-			}
-		}
-	})();
-
+	activeCount = 0;
+	activeSelectedCount = 0;
 
 	data.matrix.forEach(function (times, index) {
 		var timeId = time2index[Math.floor(currentTime)];
@@ -294,7 +269,52 @@ function updateData() {
 			client.x = undefined;
 			client.settled = false;
 		}
+
+		if (client.point !== undefined) {
+			activeCount++;
+			if (client.selected) activeSelectedCount++;
+		}
 	});
+}
+
+function renderInfos() {
+	var d = Math.floor(currentTime/1440);
+	var h = Math.floor(currentTime/60) % 24;
+	var m = Math.floor(currentTime) % 60;
+	h = (h+100+'').substr(1);
+	m = (m+100+'').substr(1);
+	$('#timer').html('Tag '+d+' - '+h+':'+m);
+
+	var text = 'Aktive MAC-Adressen: '+activeCount;
+	if (selectedCount > 0) text += '<br><span style="color:#ee5000">Ausgewählte MAC-Adressen: '+activeSelectedCount+'</span>';
+	$('#statistics').html(text);
+
+	$('#sliderInner').css('left', -(currentTime-441));
+
+	var stages = ['', '', '', '', '', '', '', ''];
+	sessions.forEach(function (session) {
+		if ((session.startTime <= currentTime) && (currentTime < session.endTime)) {
+			if (session.stage !== undefined) {
+				stages[session.stage] = 'Stage '+session.stage+': '+session.title;
+			}
+		}
+	});
+	for (var i = 1; i <= 7; i++) (function () {
+		var node = $('#stage'+i);
+		var oldText = node.attr('oldText');
+		var newText = stages[i];
+		node.attr('oldText', newText);
+
+		if (oldText != newText) {
+			if (mouseDrag) {
+				node.html(newText);
+			} else {
+				node.stop(true);
+				node.fadeOut(100, function () { node.html(newText); });
+				node.fadeIn(100);
+			}
+		}
+	})();
 }
 
 function updatePosition() {
