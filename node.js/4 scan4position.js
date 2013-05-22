@@ -20,8 +20,8 @@ Object.keys(accesspoints).forEach(function (name) {
 	point.index = ap.getId(point.name);
 	condensedAccesspoints[point.index] = {
 		x: point.x,
-		y: point.y,
-		room: point.group
+		y: point.y
+		/*,room: point.group*/
 	};
 });
 
@@ -58,7 +58,10 @@ var result = {
 	matrix: newEntries
 };
 
-fs.writeFileSync('../clients/anim/data.js', 'var data = '+JSON.stringify(result, null, '\t'), 'utf8');
+var json = JSON.stringify(result /*, null, '\t'*/);
+json = json.replace(/null/g, '');
+
+fs.writeFileSync('../clients/anim/data.js', 'var data = '+json, 'utf8');
 
 
 
