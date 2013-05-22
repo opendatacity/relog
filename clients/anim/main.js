@@ -13,11 +13,12 @@ var nearFieldRadius = 30;
 
 var timeStep = 1000/1500; (250, 500, 1000)
 var decay = Math.pow(0.8, 5);
-var stepSize = 50*timeStep;
+var stepSize = 100*timeStep;
 var frameDuration = 40;
 var radius = 1.4;
 var jump = false;
-var stepGridRadius = Math.ceil(stepSize/gridSize);
+var maxStepGridRadius = 10;
+var stepGridRadius = maxStepGridRadius;
 var nearFieldGridRadius = Math.ceil(nearFieldRadius/gridSize);
 
 var interval;
@@ -39,8 +40,8 @@ $(function () {
 
 function setSpeed(speed) {
 	timeStep = Math.pow(2, speed)*125/1500;
-	stepSize = 50*timeStep;
-	stepGridRadius = Math.ceil(stepSize/gridSize);
+	stepSize = 100*timeStep;
+	stepGridRadius = Math.min(Math.ceil(stepSize/gridSize), maxStepGridRadius);
 	nearFieldGridRadius = Math.ceil(nearFieldRadius/gridSize);
 
 	$('.speed').removeClass('active');
