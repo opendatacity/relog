@@ -114,9 +114,8 @@ function init() {
 	var v = 0.2;
 	data.matrix.forEach(function (times, index) {
 		clients[index] = { point:undefined, x:0, y:0, r:0, x0:0, y0:0, r0:0, index:index, lastEvent:0, selected:false };
-		
-		v = 3.999*v*(1-v); // bifurcation
-		random[index] = v;
+		var v = (1.1+Math.sin(index))*1e6;
+		random[index] = v - Math.floor(v);
 	});
 
 	$('#play').click(togglePlay);
