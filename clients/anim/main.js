@@ -11,7 +11,7 @@ var height = 490;
 var gridSize = 3;
 var nearFieldRadius = 30;
 
-var timeStep = 1000/1500; (250, 500, 1000)
+var timeStep = 1000/1500; //(250, 500, 1000)
 var decay = Math.pow(0.8, 5);
 var stepSize = 100*timeStep;
 var frameDuration = 40;
@@ -325,15 +325,10 @@ function updatePosition() {
 	}
 
 	clients.forEach(function (client) {
-		client.r += (client.r0 - client.r)*decay;
+		//client.r += (client.r0 - client.r)*decay;
 		client.r = client.r0;
 		
-		if (!valid(client.point) && (client.r < 1e-2)) {
-			client.valid = false;
-			return;
-		} else {
-			client.valid = true;
-		}
+		client.valid = valid(client.point) || (client.r > 1e-2);
 
 		if (client.settled) {
 			var x = Math.round(client.x/gridSize);
@@ -373,6 +368,7 @@ function updatePosition() {
 			if (!client.settled) {
 				// Kommt gerade von wo anders her
 
+				// Mach mal einen Sprung nach vorn
 				var xn, yn;
 				var dx = (client.x0 - client.x);
 				var dy = (client.y0 - client.y);
@@ -381,20 +377,24 @@ function updatePosition() {
 					var rn = Math.max(r-stepSize, 0);
 					var f = 1-rn/r;
 
-					xn = client.x + (client.x0 - client.x)*f;
-					yn = client.y + (client.y0 - client.y)*f;
+					client.x = client.x + (client.x0 - client.x)*f;
+					client.y = client.y + (client.y0 - client.y)*f;
 				} else {
-					xn = client.x0;
-					yn = client.y0;
+					client.x = client.x0;
+					client.y = client.y0;
 				}
 
-				var dx = (client.x0 - xn);
-				var dy = (client.y0 - yn);
+				// Bin ich schon da?
+				var dx = (client.x0 - client.x);
+				var dy = (client.y0 - client.y);
 				var r = Math.sqrt(dx*dx + dy*dy);
 				if (r < nearFieldRadius) {
-					xn = Math.round(xn/gridSize);
-					yn = Math.round(yn/gridSize);
+					xn = Math.round(client.x/gridSize);
+					yn = Math.round(client.y/gridSize);
+
+					// Ist der neue Platz noch frei?
 					if (grid[xn][yn]) {
+						grid[xn][yn] = false;
 						client.x = xn*gridSize;
 						client.y = yn*gridSize;
 					} else {
@@ -421,11 +421,7 @@ function updatePosition() {
 							client.settled = true;
 						}
 					}
-				} else {
-					client.x = xn;
-					client.y = yn;
 				}
-
 			}
 		}
 	});
@@ -439,30 +435,38 @@ function updatePosition() {
 			var gridx  = Math.round(client.x /gridSize);
 			var gridy  = Math.round(client.y /gridSize);
 
-			var dxmin = 0;
-			var dymin = 0;
+			grid[gridx][gridy] = true;
 
-			var dx = (gridx-gridx0);
-			var dy = (gridy-gridy0);
-			var rMin = dx*dx + dy*dy - 1e-5;
-			for (var dxg = -1; dxg <= 1; dxg++) {
-				for (var dyg = -1; dyg <= 1; dyg++) {
-					if (grid[gridx+dxg][gridy+dyg]) {
-						var dx = (gridx+dxg-gridx0);
-						var dy = (gridy+dyg-gridy0);
-						var r = dx*dx + dy*dy;
-						if (r < rMin) {
-							rMin = r;
-							dxmin = dxg;
-							dymin = dyg;
+			do {
+				var dx = (gridx-gridx0);
+				var dy = (gridy-gridy0);
+				var rMin = dx*dx + dy*dy - 1e-5;
+				var dxmin = 0;
+				var dymin = 0;
+				var foundBetter = false
+				for (var dxg = -1; dxg <= 1; dxg++) {
+					for (var dyg = -1; dyg <= 1; dyg++) {
+						if (grid[gridx+dxg][gridy+dyg] && ((dxg != 0) || (dyg != 0))) {
+							var dx = (gridx+dxg-gridx0);
+							var dy = (gridy+dyg-gridy0);
+							var r = dx*dx + dy*dy;
+							if (r < rMin) {
+								rMin = r;
+								dxmin = dxg;
+								dymin = dyg;
+								foundBetter = true;
+							}
 						}
 					}
 				}
-			}
-			grid[gridx][gridy] = true;
-			grid[gridx + dxmin][gridy + dymin] = false;
-			client.x = (gridx + dxmin)*gridSize;
-			client.y = (gridy + dymin)*gridSize;
+				if (foundBetter) {
+					gridx += dxmin;
+					gridy += dymin;
+				}
+			} while (foundBetter);
+			grid[gridx][gridy] = false;
+			client.x = gridx*gridSize;
+			client.y = gridy*gridSize;
 			//nachrücken
 		}
 	});
@@ -529,10 +533,15 @@ function renderCanvas() {
 		}
 	}
 
-	context.fillStyle = 'rgba(0,255,0,0.5)';
 	debugList.forEach(function (p) {
 		context.beginPath();
-		context.arc(p.x, p.y, 1, 0, 2*Math.PI, false);
+		context.fillStyle = '#aaf';
+		context.arc(p.xo, p.yo, 2, 0, 2*Math.PI, false);
+		context.fill();
+
+		context.beginPath();
+		context.fillStyle = '#0f0';
+		context.arc(p.x, p.y, 2, 0, 2*Math.PI, false);
 		context.fill();
 	});
 	*/	
