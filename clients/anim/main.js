@@ -56,6 +56,7 @@ var mouseDragY0;
 var mouseDragX;
 var mouseDragY;
 var sliderDragStartTime;
+var selectedCount = 0;
 
 function sliderDragStart() {
 	mouseDrag = true;
@@ -69,6 +70,7 @@ function mapDragStart() {
 	mouseDragX = mouseDragX0;
 	mouseDragY = mouseDragY0;
 	clients.forEach(function (c) { c.selected = false; });
+	selectedCount = 0;
 }
 
 function mouseDragMove(event) {
@@ -86,8 +88,14 @@ function mouseDragMove(event) {
 			var x1 = Math.max(mouseDragX0, mouseDragX) - p.left;
 			var y0 = Math.min(mouseDragY0, mouseDragY) - p.top;
 			var y1 = Math.max(mouseDragY0, mouseDragY) - p.top;
+			selectedCount = 0;
 			clients.forEach(function (c) {
-				c.selected = ((c.x >= x0) && (c.x <= x1) && (c.y >= y0) && (c.y <= y1));
+				if ((c.x >= x0) && (c.x <= x1) && (c.y >= y0) && (c.y <= y1)) {
+					c.selected = true;
+					selectedCount++;
+				} else {
+					c.selected = false;
+				}
 			});
 
 			renderCanvas();
@@ -113,6 +121,7 @@ function init() {
 	context = $('#canvas')[0].getContext('2d');
 	clients = [];
 	var v = 0.2;
+
 	data.matrix.forEach(function (times, index) {
 		clients[index] = { point:undefined, x:0, y:0, r:0, x0:0, y0:0, r0:0, index:index, lastEvent:0, selected:false };
 		var v = (1.1+Math.sin(index))*1e6;
@@ -448,19 +457,23 @@ function renderCanvas() {
 			var dy = client.y - client.yo;
 			var r = Math.sqrt(dx*dx + dy*dy);
 
+			var f = (selectedCount > 0) ? (client.selected ? 1.3 : 0.4) : 1;
+
 			if ((r > 1) && (!client.settled)) {
-				var a = Math.min(Math.pow(1/r, 0.7), 1);
-				context.strokeStyle = (client.selected) ? 'rgba(238,0,0,'+a+')' : 'rgba(0,0,0,'+a+')';
-				context.lineWidth = client.r*2*radius;
+				var a = Math.min(Math.pow(f/r, 0.6), 1);
+
+				context.strokeStyle = (client.selected) ? 'rgba(238,80,0,'+a+')' : 'rgba(0,0,0,'+a+')';
+				context.lineWidth = client.r*2*radius*f;
+				context.lineCap = 'round';
 				context.beginPath();
 				context.moveTo(client.xo, client.yo);
 				context.lineTo(client.x,  client.y );
 				context.stroke();
 
 			} else {
-				context.fillStyle = (client.selected) ? '#e00' : '#000';
+				context.fillStyle = (client.selected) ? 'rgb(238,80,0)' : 'rgb(0,0,0)';
 				context.beginPath();
-				context.arc(client.x, client.y, client.r*radius, 0, 2*Math.PI, false);
+				context.arc(client.x, client.y, client.r*radius*f, 0, 2*Math.PI, false);
 				context.fill();
 			}
 		}
