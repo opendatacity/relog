@@ -27,31 +27,9 @@ $(document).ready(function(){
 	/* embed code*/
 	if ($('#embed-form').length) {
 		var $f = $('#embed-form');
-		var $url = 'http://apps.opendatacity.de/gema-vs-youtube/';
+		var $url = 'http://apps.opendatacity.de/relog/frame.html';
 		var embedCode = function(){
-			var $size = $('input:radio[name=size]:checked',$f).val();
-			var $lang = $('input:radio[name=lang]:checked',$f).val();
-			$lang = ($lang === "") ? "de" : $lang;
-			$size = ($size === "") ? "large" : $size;
-
-			if ($lang == "de") {
-				var text   = 'Die geblockten Top-1000-YouTube-Videos';
-				var suffix = 'Unterstützt durch <a href="http://www.myvideo.de">MyVideo</a>. Realisiert von <a href="http://www.opendatacity.de/">OpenDataCity</a>. Anwendung steht unter <a rel="license" href="http://creativecommons.org/licenses/by/3.0/de/">CC-BY 3.0</a>.';
-				var file   = 'frame.de.html';
-			} else {
-				var text   = 'Top 1000 YouTube Videos';
-				var suffix = 'Supported by <a href="http://www.myvideo.de">MyVideo</a>. Made by <a href="http://www.opendatacity.de/">OpenDataCity</a>. This App is under <a rel="license" href="http://creativecommons.org/licenses/by/3.0/us/">CC-BY 3.0</a>.';
-				var file   = 'frame.en.html';
-			}
-
-					$('#embed-size',$f).show();
-					switch ($size) {
-						case 'large':  var $wh = 'width="860" height="610"'; break;
-						case 'medium': var $wh = 'width="640" height="490"'; break;
-						case 'small':  var $wh = 'width="520" height="370"'; break;
-						case 'verysmall':  var $wh = 'width="420" height="740"'; break;
-					}
-					var $code = '<iframe src="'+$url+file+'" '+$wh+' scrolling="no" frameborder="0" style="margin:0"><a href="'+$url+'">'+text+'</a></iframe><br><small>'+suffix+'</small>';
+			var $code = '<iframe src="'+$url+'"  width="950" height="580" scrolling="no" frameborder="0" style="margin:0"><a href="'+$url+'">re:log - Besucherstromanalyse per re:publica W-LAN</a></iframe><br><small>Realisiert von <a href="http://www.opendatacity.de/">OpenDataCity</a>. Unterstützt durch <a href="http://www.picocell.de">picocell</a> und <a href="http://newthinking.de">newthinking</a>. Anwendung steht unter <a rel="license" href="http://creativecommons.org/licenses/by/3.0/de/">CC-BY 3.0</a>.</small>';
 			$('#embed-code', $f).text($code);
 		};
 		embedCode();

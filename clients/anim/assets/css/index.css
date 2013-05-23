@@ -10,11 +10,12 @@ body {
 		position: relative;
 		margin: 0px auto;
 		box-shadow: 0px 0px 40px -20px rgba(0,0,0,0.4);
-		width: 860px; 
+		width: 950px; 
 		background: #fff;
-		padding: 50px;
+		padding: 30px;
 		
 	}
+
 		.social {
 			height: 35px;
 		}
@@ -80,7 +81,7 @@ body {
 				
 			}
 			
-				a#odclogo {
+				a#odclogo, a#pclogo, a#ntlogo {
 					
 					display: inline-block;
 					position: relative;
@@ -89,26 +90,24 @@ body {
 					font-size: 0px;
 					text-indent: -1000px;
 					color: transparent;
-					background: url(../img/opendatacity.png) center center no-repeat;
 					margin: 0px;
 					padding: 0px;
 					top: -5px;
 					
 				}
-
-				a#mvlogo {
+			
+				a#odclogo {
+					background: url(../img/opendatacity.png) center center no-repeat;
 					
-					display: inline-block;
-					position: relative;
-					width: 200px;
-					height: 60px;
-					font-size: 0px;
-					text-indent: -1000px;
-					color: transparent;
-					background: url(../img/myvideo.png) center center no-repeat;
-					margin: 0px;
-					padding: 0px;
-					top: -5px;
+				}
+			
+				a#pclogo {
+					background: url(../img/picocell.png) center center no-repeat;
+					
+				}
+			
+				a#ntlogo {
+					background: url(../img/newthinking.png) center center no-repeat;
 					
 				}
 				
