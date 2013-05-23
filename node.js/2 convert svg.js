@@ -31,6 +31,8 @@ svg.forEach(function (line) {
 
 		x = (x - x0)/width;
 		y = (y - y0)/height;
+		var x = Math.round(x*1e5)/1e5;
+		var y = Math.round(y*1e5)/1e5;
 		accesspoints[id] = {id:id, x:x, y:y, group:group}
 	} else if (line.match(/\<g id\=/) != null) {
 		group = line.match(/id\=\"(.*?)\"/)[1];
