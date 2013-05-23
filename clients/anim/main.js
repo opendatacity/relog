@@ -224,16 +224,16 @@ function init() {
 function startPlay() {
 	if (!interval) {
 		interval = setInterval(update, frameDuration);
-		$('#play').removeClass('pause');
 	}
+	$('#play').removeClass('pause');
 }
 
 function stopPlay() {
 	if (interval) {
 		clearInterval(interval);
 		interval = false;
-		$('#play').addClass('pause');
 	}
+	$('#play').addClass('pause');
 }
 
 function togglePlay() {
