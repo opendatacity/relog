@@ -40,6 +40,7 @@ log.forEach(function (entry) {
 times.sort(function (a,b) { return a-b });
 
 var newEntries = [];
+var csv = [['Zeit','Accesspoint','Raum','x (ungefähr)','y (ungefähr)','fortlaufende Gerätenummer'].join(',')];
 log.forEach(function (entry) {
 	if (accesspoints[entry.access_point] === undefined) return;
 
@@ -49,6 +50,14 @@ log.forEach(function (entry) {
 
 	if (newEntries[mac] === undefined) newEntries[mac] = [];
 	newEntries[mac][time] = point;
+	csv.push([
+		entry.date,
+		entry.access_point,
+		condensedAccesspoints[point].room,
+		condensedAccesspoints[point].x*2,
+		condensedAccesspoints[point].y,
+		mac
+	].join(','));
 });
 
 var result = {
@@ -62,6 +71,7 @@ var json = JSON.stringify(result /*, null, '\t'*/);
 json = json.replace(/null/g, '');
 
 fs.writeFileSync('../clients/anim/data.js', 'var data = '+json, 'utf8');
+fs.writeFileSync('../clients/anim/data.csv', csv.join('\n'), 'utf8');
 
 
 
