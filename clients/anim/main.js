@@ -534,35 +534,6 @@ function renderCanvas() {
 		context.fill();
 	})
 
-/*
-	clients.forEach(function (client) {
-		if (client.valid) {
-			var dx = client.x - client.xo;
-			var dy = client.y - client.yo;
-			var r = Math.sqrt(dx*dx + dy*dy);
-
-			var f = (selectedCount > 0) ? (client.selected ? 1.3 : 0.4) : 1;
-
-			if ((r > 1) && (!client.settled)) {
-				var a = Math.min(Math.pow(f/r, 0.6), 1);
-
-				context.strokeStyle = (client.selected) ? 'rgba(238,80,0,'+a+')' : 'rgba(0,0,0,'+a+')';
-				context.lineWidth = client.r*2*radius*f;
-				context.beginPath();
-				context.moveTo(client.xo, client.yo);
-				context.lineTo(client.x,  client.y );
-				context.stroke();
-
-			} else {
-				context.fillStyle = (client.selected) ? 'rgb(238,80,0)' : 'rgb(0,0,0)';
-				context.beginPath();
-				context.arc(client.x, client.y, client.r*radius*f, 0, 2*Math.PI, false);
-				context.fill();
-			}
-		}
-	});
-*/
-
 	if (mapDrag) {
 		var x = Math.min(mouseDragX0, mouseDragX);
 		var y = Math.min(mouseDragY0, mouseDragY);
