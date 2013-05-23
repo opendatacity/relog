@@ -1,13 +1,13 @@
 var startTime = (24*1 +  9)*60;
 var minTime =   (24*0 + 15)*60;
-var maxTime =   (24*3 + 22)*60;
+var maxTime =   (24*3 + 24)*60;
 
 
 var currentTime = startTime;
 var clients = [];
 var context;
-var width = 980;
-var height = 490;
+var width = 950;
+var height = 475;
 var gridSize = 3;
 var nearFieldRadius = 30;
 
