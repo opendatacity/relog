@@ -71,7 +71,7 @@ var json = JSON.stringify(result /*, null, '\t'*/);
 json = json.replace(/null/g, '');
 
 fs.writeFileSync('../clients/anim/data.js', 'var data = '+json, 'utf8');
-fs.writeFileSync('../clients/anim/data.csv', csv.join('\n'), 'utf8');
+fs.writeFileSync('../clients/anim/republica13-wlan-data.csv', csv.join('\n'), 'utf8');
 
 
 
