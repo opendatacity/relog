@@ -20,8 +20,8 @@ Object.keys(accesspoints).forEach(function (name) {
 	point.index = ap.getId(point.name);
 	condensedAccesspoints[point.index] = {
 		x: point.x,
-		y: point.y
-		/*,room: point.group*/
+		y: point.y,
+		room: point.group
 	};
 });
 
