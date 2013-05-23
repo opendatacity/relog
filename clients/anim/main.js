@@ -34,8 +34,6 @@ $(function () {
 	init();
 	setSpeed(2);
 	startPlay();
-	//update();
-	//setTimeout(stopPlay, 10000);
 })
 
 function setSpeed(speed) {
@@ -58,31 +56,42 @@ var mouseDragY;
 var sliderDragStartTime;
 var selectedCount = 0;
 
-function sliderDragStart() {
+function sliderDragStart(x) {
 	mouseDrag = true;
 	sliderDrag = true;
 	sliderDragStartTime = currentTime;
+	mouseDragX = x;
+	mouseDragX0 = x;
 }
 
-function mapDragStart() {
+function mapDragStart(x, y) {
 	mouseDrag = true;
 	mapDrag = true;
-	mouseDragX = mouseDragX0;
-	mouseDragY = mouseDragY0;
-	clients.forEach(function (c) { c.selected = false; });
+	mouseDragX = x;
+	mouseDragY = y;
+	mouseDragX0 = x;
+	mouseDragY0 = y;
+
 	selectedCount = 0;
+	activeCount = 0;
+	activeSelectedCount = 0;
+
+	clients.forEach(function (c) { c.selected = false; });
+
+	renderCanvas();
+	renderInfos();
 }
 
-function mouseDragMove(event) {
+function mouseDragMove(x, y) {
 	if (mouseDrag) {
 		if (sliderDrag) {
-			currentTime = sliderDragStartTime + (mouseDragX0 - event.pageX);
+			currentTime = sliderDragStartTime + (mouseDragX0 - x);
 
 			updateFrame();	
 		}
 		if (mapDrag) {
-			mouseDragX = event.pageX;
-			mouseDragY = event.pageY;
+			mouseDragX = x;
+			mouseDragY = y;
 			var p = $('#container').offset();
 			var x0 = Math.min(mouseDragX0, mouseDragX) - p.left;
 			var x1 = Math.max(mouseDragX0, mouseDragX) - p.left;
@@ -111,8 +120,8 @@ function mouseDragMove(event) {
 		event.preventDefault();
 		return false;
 	} else {
-		mouseDragX0 = event.pageX;
-		mouseDragY0 = event.pageY;
+		mouseDragX0 = x;
+		mouseDragY0 = y;
 	}
 }
 
@@ -135,17 +144,48 @@ function init() {
 		random[index] = v - Math.floor(v);
 	});
 
-	$('#play').click(togglePlay);
+	$('#play'  ).click(togglePlay);
 	$('#speed1').click(function () { setSpeed(1); });
 	$('#speed2').click(function () { setSpeed(2); });
 	$('#speed3').click(function () { setSpeed(3); });
 
-	$('#sliderWrapper').mousedown(function () { sliderDragStart(); });
-	$('#container').mousedown(function () { mapDragStart(); });
-	$(document).mousemove(function (e) { return mouseDragMove(e); });
-	$(document).mouseup(function (e) { mouseDragStop(); });
+	$('#sliderWrapper').mousedown(function (e) {
+		sliderDragStart(e.pageX);
+		e.preventDefault();
+		return false;
+	});
+	$('#sliderWrapper').get(0).addEventListener('touchstart', function (e) {
+		sliderDragStart(e.touches[0].pageX);
+		e.preventDefault();
+		return false;
+	}, false);
 
-	$(document).on('selectstart', function (e) { e.preventDefault(); return !mouseDrag; });
+	$('#container').mousedown(function (e) {
+		mapDragStart(e.pageX, e.pageY);
+		e.preventDefault();
+		return false;
+	});
+	$('#container').get(0).addEventListener('touchstart', function (e) {
+		mapDragStart(e.touches[0].pageX, e.touches[0].pageY);
+		e.preventDefault();
+		return false;
+	}, false);
+
+
+	$(document).mousemove(function (e) {
+		mouseDragMove(e.pageX, e.pageY);
+	});
+	$(document).get(0).addEventListener('touchmove', function (e) {
+		mouseDragMove(e.touches[0].pageX, e.touches[0].pageY);
+	}, false);
+
+
+	$(document).mouseup(function () {
+		mouseDragStop();
+	});
+	$(document).get(0).addEventListener('touchend', function () {
+		mouseDragStop();
+	}, false);
 
 	var index = -1;
 	for (var time = -60; time <= (4*24+1)*60; time++) {
