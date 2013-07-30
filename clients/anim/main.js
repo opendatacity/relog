@@ -1,11 +1,10 @@
-var startTime = (24*1 + 12)*60;
-var minTime =   (24*0 + 15)*60;
+var startTime = (24*0 +  0)*60;
+var minTime =   (24*0 +  0)*60;
 var maxTime =   (24*3 + 24)*60;
 
 
 var currentTime = startTime;
 var clients = [];
-var context;
 var width = 950;
 var height = 475;
 var gridSize = 3;
@@ -21,6 +20,8 @@ var maxStepGridRadius = 10;
 var stepGridRadius = maxStepGridRadius;
 var nearFieldGridRadius = Math.ceil(nearFieldRadius/gridSize);
 
+var frameNo = 0;
+
 var interval;
 var time2index = [];
 var random = [];
@@ -32,7 +33,7 @@ for (var x = -nearFieldGridRadius; x < width/gridSize+nearFieldGridRadius; x++) 
 
 $(function () {
 	init();
-	setSpeed(1);
+	setSpeed(2);
 	startPlay();
 })
 
@@ -134,7 +135,6 @@ function mouseDragStop() {
 }
 
 function init() {
-	context = $('#svg');
 	clients = [];
 	var v = 0.2;
 
@@ -259,26 +259,10 @@ function updateFrame() {
 
 	if (currentTime < minTime) currentTime = minTime;
 
-	if (currentTime >= 2160+21) {
-		clearInterval(interval);
-		screenshot = true;
-	}
-
 	updateData();
 	updatePosition();
 	renderInfos();
 	renderCanvas();
-
-	if ((currentTime >= 2160+5) && (!selectedCount)) {
-		selectedCount = 0;
-		clients.forEach(function (c) {
-			if ((c.x < 268) && (c.y < 247)) {
-				c.selected = true;
-				selectedCount++;
-			}
-		});
-	}
-
 }
 
 function updateData() {
@@ -530,7 +514,7 @@ function updatePosition() {
 }
 
 function renderCanvas() {
-	context.clear();
+	var svg = [];
 
 	var drawLists = [[],[],[],[]];
 	clients.forEach(function (client) {
@@ -560,38 +544,34 @@ function renderCanvas() {
 	var strokeStyle = 'rgba(238,80,0,0.3)';
 	var lineWidth = 2*radius;
 	drawLists[0].forEach(function (client) {
-		context.append('<line opacity="0.3" fill="none" stroke="#ee5000" stroke-width="'+(2*radius)+'" stroke-linecap="round" x1="'+client.xo+'" y1="'+client.yo+'" x2="'+client.x+'" y2="'+client.y+'"/>');
+		svg.push('<line opacity="0.3" fill="none" stroke="#ee5000" stroke-width="'+(2*radius)+'" stroke-linecap="round" x1="'+client.xo+'" y1="'+client.yo+'" x2="'+client.x+'" y2="'+client.y+'"/>');
 	})
 
-	/*
+	
 	var a = (selectedCount > 0) ? 0.15 : 0.15;
-	context.strokeStyle = 'rgba(0,0,0,'+a+')';
-	context.lineWidth = 2*radius*((selectedCount > 0) ? 0.4 : 1);
-	context.beginPath();
 	drawLists[1].forEach(function (client) {
-		context.moveTo(client.xo, client.yo);
-		context.lineTo(client.x,  client.y );
-		if (screenshot) console.log('<line opacity="'+a+'" fill="none" stroke="#000000" stroke-width="'+(2*radius*((selectedCount > 0) ? 0.4 : 1))+'" stroke-linecap="round" x1="'+client.xo+'" y1="'+client.yo+'" x2="'+client.x+'" y2="'+client.y+'"/>');
+		svg.push('<line opacity="'+a+'" fill="none" stroke="#000000" stroke-width="'+(2*radius*((selectedCount > 0) ? 0.4 : 1))+'" stroke-linecap="round" x1="'+client.xo+'" y1="'+client.yo+'" x2="'+client.x+'" y2="'+client.y+'"/>');
 	})
-	context.stroke();
 
-	context.fillStyle = 'rgb(238,80,0)';
 	drawLists[2].forEach(function (client) {
-		context.beginPath();
-		context.arc(client.x, client.y, radius*1.3, 0, 2*Math.PI, false);
-		context.fill();
-		if (screenshot) console.log('<circle fill="#ee5000" cx="'+client.x+'" cy="'+client.y+'" r="'+(radius*1.3)+'"/>');
+		svg.push('<circle fill="#ee5000" cx="'+client.x+'" cy="'+client.y+'" r="'+(radius*1.3)+'"/>');
 	});
 
 	var r = (selectedCount > 0) ? 0.4 : 1;
-	context.fillStyle = 'rgb(0,0,0)';
 	drawLists[3].forEach(function (client) {
-		context.beginPath();
-		context.arc(client.x, client.y, radius*r, 0, 2*Math.PI, false);
-		context.fill();
-		if (screenshot) console.log('<circle fill="#000000" cx="'+client.x+'" cy="'+client.y+'" r="'+(radius*r)+'"/>');
+		svg.push('<circle fill="#000000" cx="'+client.x+'" cy="'+client.y+'" r="'+(radius*r)+'"/>');
 	})
 
+	var result = {
+		svg:svg.join('\n'),
+		time:frameNo
+	};
+
+	$.post('http://127.0.0.1:8888', JSON.stringify(result), 'text');
+
+	frameNo++;
+
+	/*
 	if (mapDrag) {
 		var x = Math.min(mouseDragX0, mouseDragX);
 		var y = Math.min(mouseDragY0, mouseDragY);
