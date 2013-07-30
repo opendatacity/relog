@@ -10,7 +10,9 @@ cleaned/rp13.tsv
 
 cleaned/rp13.xlsx
 
-clients/anim/.htaccessclients/anim/.htpasswd
+clients/anim/.htaccess
+clients/anim/.htpasswd
+clients/anim/frames/
 
 .DS_Store
 .DS_Store?
