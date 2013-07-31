@@ -33,8 +33,9 @@ for (var x = -nearFieldGridRadius; x < width/gridSize+nearFieldGridRadius; x++) 
 
 $(function () {
 	init();
-	setSpeed(2);
-	startPlay();
+	setSpeed(1);
+	//update();
+	//startPlay();
 })
 
 function setSpeed(speed) {
@@ -514,6 +515,7 @@ function updatePosition() {
 }
 
 function renderCanvas() {
+	/*
 	var svg = [];
 
 	var drawLists = [[],[],[],[]];
@@ -565,9 +567,9 @@ function renderCanvas() {
 	var result = {
 		svg:svg.join('\n'),
 		time:frameNo
-	};
+	};*/
 
-	$.post('http://127.0.0.1:8888', JSON.stringify(result), 'text');
+	//$.post('http://127.0.0.1:8888', JSON.stringify(result), 'text');
 
 	frameNo++;
 

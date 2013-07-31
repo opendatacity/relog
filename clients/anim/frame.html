@@ -18,15 +18,22 @@
 			body {
 				font-family: Helvetica, Verdana, Arial, sans-serif;
 			}
+			div {
+			}
 			#content {
 				position: relative;
 				width: 950px;
+				height: 540px;
+				overflow: hidden;
 			}
 			#container {
 				position: absolute;
-				top: 20px;
+				width: 950px;
+				height: 475px;
+				top: 0px;
 				left: 0;
 				cursor: pointer;
+				overflow: hidden;
 			}
 			#canvas, #map, .label {
 				position: absolute;
@@ -42,6 +49,7 @@
 				padding: 3px;
 				overflow: hidden;
 				word-wrap: break-word;
+				position: absolute;
 			}
 			.label.grey {
 				color: #84e0fb;
@@ -49,7 +57,7 @@
 			}
 			#statistics {
 				position: absolute;
-				top: 465px;
+				top: 435px;
 				left: 5px;
 				font-size: 12px;
 				color: #034456;
@@ -57,7 +65,7 @@
 			}
 			#timer {
 				position: absolute;
-				top: 445px;
+				top: 415px;
 				left: 5px;
 				font-size: 16px;
 				font-weight: bold;
@@ -67,7 +75,7 @@
 				position: absolute;
 				width: 950px;
 				height: 50px;
-				top: 515px;
+				top: 488px;
 				left: 0px;
 			}
 			#play {
@@ -91,14 +99,14 @@
 			}
 			.speed {
 				width: 35px;
-				height: 13px;
+				height: 12px;
 				position: absolute;
 				background: #fff;
 				color: #80a1aa;
 				border: 1px solid #80a1aa;
 				font-size: 11px;
 				left: 55px;
-				padding-top: 1px;
+				padding-top: 2px;
 				top: 0px;
 				text-align: center;
 				border-radius: 5px;
@@ -125,7 +133,7 @@
 				position: relative;
 				top: 0px;
 				cursor: pointer;
-				/*background-image: url(slider.png);*/
+				background-image: url(slider.svg);
 				background-repeat: no-repeat;
 				background-position: 2px 0px;
 			}
@@ -170,8 +178,7 @@
 	<body>
 		<div id="content">
 			<div id="container">
-				<img id="map" src="ap.svg" width="950" height="475">
-				<svg id="svg" width="950" height="475"></svg>
+				<!--<img id="map" src="ap.svg" width="950" height="475">-->
 				<div class="label" id="stage1" style="left:105px; top:220px; width:160px"></div>
 				<div class="label" id="stage2" style="left:490px; top: 20px; width: 90px; height:46px"></div>
 				<div class="label" id="stage3" style="left:160px; top:335px; width:140px; height:34px"></div>
