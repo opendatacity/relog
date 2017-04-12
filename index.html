@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="de">
+	<head>
+		<title>re:log - Besucherstromanalyse per re:publica W-LAN</title>
+		<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+
+		<base href="https://apps.opendatacity.de/relog/" target="_parent">
+
+		<meta property="og:title" content="re:log - Besucherstromanalyse per re:publica W-LAN" />
+		<meta property="og:type" content="article" />
+		<meta property="og:url" content="https://apps.opendatacity.de/relog/" />
+		<meta property="og:image" content="https://apps.opendatacity.de/relog/screenshot.png" />
+
+		<link href="assets/css/bootstrap.min.css" rel="stylesheet" type="text/css">
+		<link href="assets/css/index.css" rel="stylesheet" type="text/css">
+
+		<script src="assets/js/jquery-1.8.3.min.js" type="text/javascript"></script>
+		<script src="assets/js/bootstrap.min.js" type="text/javascript"></script>
+		<script src="assets/js/helper.js" type="text/javascript"></script>
+		<script type="text/javascript">
+			var $embed_overlay = '<div id="embed-overlay"><div id="embed-content"><h1>Weitergeben</h1><form name="embed-form" id="embed-form" action="javascript:;" method="post"><p>Kopiere diesen Code in Deine Webseite:<br>(Die Anwendung hat eine feste Größe von 950 Pixeln Breite und 580 Pixeln Höhe.)</p><code id="embed-code"></code></form><p><a href="javascript:;" class="btn btn-medium btn-primary">Schließen</a></p></div></div>';
+		</script>
+	</head>
+	<body>
+		<div id="fb-root"></div>
+		<script>(function(d, s, id) {
+			var js, fjs = d.getElementsByTagName(s)[0];
+			if (d.getElementById(id)) return;
+			js = d.createElement(s); js.id = id;
+			js.src = "//connect.facebook.net/de_DE/all.js#xfbml=1";
+			fjs.parentNode.insertBefore(js, fjs);
+		}(document, 'script', 'facebook-jssdk'));</script>
+		<div id="container">
+			<h1 style="font-size:36px">re:log - Besucherstromanalyse per re:publica W-LAN</h1>
+			<div style="position:relative;margin-top:40px">
+				<p class="lead" style="width:600px;">
+					Wie  haben sich die Besucherströme der re:publica 2013 von einem Vortrag zum nächsten bewegt? Der Konferenzplan zeigt die mit dem dortigen W-LAN verbundenen Geräte - mit gedrückter Maustaste/ per Touch lassen sich Punkte markieren.
+				</p>
+
+				<div id="social" style="position:absolute; bottom:-20px; right:0; width:180px">
+					<div id="social-twitter" class="social">
+						<a href="https://twitter.com/share" class="twitter-share-button" data-url="https://apps.opendatacity.de/relog/" data-text="re:log - Besucherstromanalyse per re:publica W-LAN" data-via="opendatacity" data-lang="de">Twittern</a>
+						<script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0];if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src="//platform.twitter.com/widgets.js";fjs.parentNode.insertBefore(js,fjs);}}(document,"script","twitter-wjs");</script>
+					</div>
+					<div id="social-google" class="social">
+						<div class="g-plusone"></div>
+						<script type="text/javascript">
+							window.___gcfg = {lang: 'de'};
+
+							(function() {
+								var po = document.createElement('script'); po.type = 'text/javascript'; po.async = true;
+								po.src = 'https://apis.google.com/js/plusone.js';
+								var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(po, s);
+							})();
+						</script>
+					</div>
+					<div id="social-facebook" class="social">
+						<div class="fb-like" data-href="https://apps.opendatacity.de/relog/" data-send="false" data-layout="button_count" data-width="180" data-show-faces="true"></div>
+					</div>
+					<div class="social"><a href="javascript:;" class="btn btn-primary embed-button">Einbetten</a></div>
+				</div>
+			</div>
+
+			
+			<iframe src="frame.html" width="950" height="580" scrolling="no" frameborder="0"><a href="">re:log - Besucherstromanalyse der re:publica</a></iframe>
+			<p style="text-align:right;font-size:12px">Realisiert von <a href="https://opendatacity.de/">OpenDataCity</a>. Unterstützt durch <a href="http://www.picocell.de">picocell</a> und <a href="http://newthinking.de">newthinking</a>. Anwendung steht unter <a rel="license" href="http://creativecommons.org/licenses/by/3.0/de/">CC-BY 3.0</a>.</p>
+
+			<div class="row-fluid" style="margin-top:50px">
+
+				<div class="span6">
+					<p>
+						Jeder Punkt auf dem interaktiven Plan zeigt ein Gerät, das sich auf dem Gelände der re:publica 13 in das Konferenz-W-LAN über einen der ca. 100 Access-Points einloggte. 
+					</p>
+					<p>Datenschutz:</p>
+
+					<p>Diese Visualisierung beruht auf den Hardware-Adressen der WLAN-Karten (<a href="http://de.wikipedia.org/wiki/MAC-Adresse" target="_blank">"MAC-Adressen"</a>). Sie wurden unmittelbar nach ihrer Erfassung und vor Weitergabe an OpenDataCity vom Netzwerk-Team der re:publica kryptographisch so pseudonymisiert, dass ein Rückschluss auf die verwendeten Adressen nicht
+					möglich ist ("gesalzen und gehashed").</p>
+
+					<p>Gerne hätten wir an dieser Stelle die Möglichkeit angeboten, sich unter Angabe der Hardware-Adresse auf der Karte wiederfinden zu können. Da wir aber im Vorfeld der rp13 diese Verwendung nicht angekündigt haben, würde dies gegen geltende Datenschutzbestimmungen verstoßen. 
+					</p>
+					<p>Für das kommende Jahr sei also hiermit angekündigt, dass wir dann gerne vom "Aluhut-" in den "Spackeria-Modus" wechseln und einen solchen Lookup anbieten wollen.
+					</p>
+				</div>
+				<div class="span6">
+					<p>Tipps: Mit gedrückter Maustaste bzw. per Fingerdruck lässt sich ein Rechteck aufziehen und eine Gruppe von Punkten markieren. So lässt sich deren Weg über die re:publica verfolgen. Per einfachen Klick/ Touch auf die Karte wird die Auswahl wieder aufgehoben. Die Zeitleiste unten lässt sich scrollen.
+					</p><p>
+						Die Entwicklung der Anwendung haben das re:publica Team sowie die Netzwerktechniker von picocell und newthinking unterstützt. Ein besonderes Dankeschön geht hiermit noch an den
+						Internet-Provider <a href="http://www.ipb.de/" target="_blank">IPB</a>.
+						</p><p>Insgesamt werden 6700 verschiedene Geräte dargestellt. Der komplett anonymisierte Datensatz, mit dem die App läuft, gibt es hier <a href="republica13-wlan-data.csv.zip" target="_blank">zum Download</a>. 
+					</p>
+					<p>
+						Die App läuft auch bei <a href="http://www.spreeblick.com/relog-besucherstromanalyse-per-republica-w-lan/Spreeblick" target="_blank">Spreeblick</a> und Hintergrundinfos gibt es bei <a href="http://datenjournalist.de/relog" target="_blank">datenjournalist.de</a>.
+					</p>
+				</div>
+			</div>
+
+			<hr style="margin-top:70px; border-color:#EEE">
+			
+			<div class="row-fluid">
+				<div class="span4">
+					Realisiert von <br><a href="https://opendatacity.de/" id="odclogo" target="_blank">OpenDataCity</a>
+				</div>
+				<div class="span4">
+					Unterstützt durch <br><a href="http://www.picocell.de/" id="pclogo" target="_blank">picocell</a>
+				</div>
+				<div class="span4">
+					und durch <br><a href="http://newthinking.de/" id="ntlogo" target="_blank">newthinking</a>
+				</div>
+			</div>
+			<p style="text-align: right; margin-top: 100px">Diese Seite wird mit Google Analytics ausgewertet. <a href="https://opendatacity.de/kontakt/" target="_blank">Impressum</a></p>
+		</div>
+		<script type="text/javascript">
+			var _gaq = _gaq || [];
+			_gaq.push(['_setAccount', 'UA-38022006-1']);
+			_gaq.push(['_trackPageview']);
+
+			(function() {
+				var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+				ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+				var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+			})();
+		</script>
+	</body>
+</html>
